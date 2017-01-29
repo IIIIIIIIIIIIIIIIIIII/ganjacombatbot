@@ -8,20 +8,24 @@ import org.dreambot.api.wrappers.items.GroundItem;
 public class TakeLootState implements State {
 
     private int index = 0;
+    private int previousLootCount;
 
     @Override
     public boolean execute(AbstractScript context) {
         AbstractScript.log("TAKE_LOOT");
-        GroundItem currentLoot = context.getGroundItems().closest(item -> {
-            // TODO: Implement edilecek
-        });
+        GroundItem currentLoot = context.getGroundItems().closest(item -> item.distance() < 3
+                && item.getName().equalsIgnoreCase(GlobalSettings.LOOT_NAMES[index]));
+        previousLootCount = context.getInventory().count(GlobalSettings.LOOT_NAMES[index]);
 
-        currentLoot.interact("Take");
-
-        if (index >= GlobalSettings.LOOT_NAMES.length) {
-            return true;
+        if (currentLoot != null) {
+            currentLoot.interact("Take");
+            AbstractScript.sleepUntil(() -> previousLootCount < context.getInventory().count(GlobalSettings.LOOT_NAMES[index]), 3000);
+            index++;
+        } else {
+            index++;
         }
-        return false;
+
+        return index >= GlobalSettings.LOOT_NAMES.length;
     }
 
     @Override

@@ -32,7 +32,9 @@ public class KillMobState implements State {
                         && !npc.isInteractedWith()
                         && npc.exists());
             }
-            AbstractScript.log("Chosen: " + npc.getName());
+            if (npc != null) {
+                AbstractScript.log("Chosen: " + npc.getName());
+            }
         } else if (npc != null && (GlobalSettings.LOOT ? !npc.exists() : npc.getHealthPercent() == 0)) {
             if (GlobalSettings.LOOT) {
                 nextState = new TakeLootState();
