@@ -1,5 +1,7 @@
 package com.toliga.ganjacombatbot;
 
+import org.dreambot.api.methods.map.Tile;
+
 public class GlobalSettings {
     public static String[] MOB_NAMES = null;
     public static boolean POWERKILL = false;
@@ -12,4 +14,6 @@ public class GlobalSettings {
     public static boolean LOGOUT_WHEN_FULL = false;
     public static boolean BURY_BONES = false;
     public static String[] LOOT_NAMES = null;
+
+    public static Tile SOURCE_TILE = null;
 }

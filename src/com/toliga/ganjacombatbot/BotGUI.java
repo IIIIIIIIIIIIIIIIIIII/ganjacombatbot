@@ -65,6 +65,9 @@ public class BotGUI extends JFrame {
     private void registerEvents() {
         btnStart.addActionListener(event -> {
             context.setStarted(true);
+            btnStart.setEnabled(false);
+            btnStop.setEnabled(true);
+
             String mobs[] = mobNameTextField.getText().split(",");
 
             for (int i = 0; i < mobs.length; i++) {
@@ -82,7 +85,11 @@ public class BotGUI extends JFrame {
             GlobalSettings.LOOT_NAMES = loots;
         });
 
-        btnStop.addActionListener(event -> {});
+        btnStop.addActionListener(event -> {
+            context.setStarted(false);
+            btnStop.setEnabled(false);
+            btnStart.setEnabled(true);
+        });
 
         powerkillCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();

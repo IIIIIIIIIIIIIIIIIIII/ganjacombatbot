@@ -1,18 +1,30 @@
 package com.toliga.ganjacombatbot.states;
 
 import com.toliga.ganjabots.core.State;
+import com.toliga.ganjabots.core.Utilities;
+import org.dreambot.api.methods.map.Area;
 import org.dreambot.api.script.AbstractScript;
 
 public class WalkToBankState implements State {
 
+    private Area destinationArea;
+
     @Override
     public boolean execute(AbstractScript context) {
         AbstractScript.log("WALK_TO_BANK");
+
+        destinationArea = context.getBank().getClosestBankLocation().getArea(1);
+
+        if (!destinationArea.contains(context.getLocalPlayer())) {
+            Utilities.GoToArea(context, destinationArea);
+            return false;
+        }
+
         return true;
     }
 
     @Override
     public State next() {
-        return new StartState();
+        return new BankState();
     }
 }

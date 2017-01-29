@@ -9,6 +9,7 @@ public class BuryBonesState implements State {
 
     @Override
     public boolean execute(AbstractScript context) {
+        AbstractScript.log("BURY_BONES");
         boneCount = context.getInventory().count("Bones");
 
         if (context.getInventory().contains("Bones")) {
