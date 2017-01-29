@@ -1,17 +1,18 @@
-package com.toliga.ganjacombatbot;
+package com.toliga.ganjacombatbot.states;
 
 import com.toliga.ganjabots.core.State;
 import org.dreambot.api.script.AbstractScript;
 
-public class StartState implements State {
+public class WalkToBankState implements State {
 
     @Override
     public boolean execute(AbstractScript context) {
-        return false;
+        AbstractScript.log("WALK_TO_BANK");
+        return true;
     }
 
     @Override
     public State next() {
-        return null;
+        return new StartState();
     }
 }
