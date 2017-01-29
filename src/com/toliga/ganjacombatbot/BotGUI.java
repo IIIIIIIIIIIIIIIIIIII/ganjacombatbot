@@ -1,9 +1,11 @@
 package com.toliga.ganjacombatbot;
 
 import com.toliga.ganjabots.core.Utilities;
+import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.script.AbstractScript;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class BotGUI extends JFrame {
     private JButton btnStart;
@@ -38,6 +40,8 @@ public class BotGUI extends JFrame {
     private JPanel foodPanel;
     private JPanel potionPanel;
     private GanjaCombatBotMain context;
+    private Image backgroundImage;
+    private Image ganjaIcon;
 
     public BotGUI(AbstractScript context, String title) {
         this.context = (GanjaCombatBotMain) context;
@@ -53,6 +57,8 @@ public class BotGUI extends JFrame {
     }
 
     private void initializeComponents() {
+        backgroundImage = Utilities.LoadImage("http://i63.tinypic.com/2j48v94.png", 190, 111);
+        ganjaIcon = Utilities.LoadImage("http://ai-i1.infcdn.net/icons_siandroid/png/200/1138/1138962.png", 20, 20);
         btnStart.setIcon(new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/buttons/512/Icon_3-128.png", 35, 35)));
         btnStop.setIcon(new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/buttons/512/Icon_5-128.png", 35, 35)));
         infoLabel.setIcon(new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/buttons/512/Icon_17-128.png", 20, 20)));
@@ -124,5 +130,49 @@ public class BotGUI extends JFrame {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.BURY_BONES = source.isSelected();
         });
+    }
+
+    public void DrawInGameGUI(Graphics2D graphics) {
+        int     xhAtk = context.getSkillTracker().getGainedExperiencePerHour(Skill.ATTACK),
+                xhStr = context.getSkillTracker().getGainedExperiencePerHour(Skill.STRENGTH),
+                xhDef = context.getSkillTracker().getGainedExperiencePerHour(Skill.DEFENCE),
+                xhHit = context.getSkillTracker().getGainedExperiencePerHour(Skill.HITPOINTS),
+                xhRan = context.getSkillTracker().getGainedExperiencePerHour(Skill.RANGED),
+                xhMag = context.getSkillTracker().getGainedExperiencePerHour(Skill.MAGIC);
+
+        long    xgAtk = context.getSkillTracker().getGainedExperience(Skill.ATTACK),
+                xgStr = context.getSkillTracker().getGainedExperience(Skill.STRENGTH),
+                xgDef = context.getSkillTracker().getGainedExperience(Skill.DEFENCE),
+                xgHit = context.getSkillTracker().getGainedExperience(Skill.HITPOINTS),
+                xgRan = context.getSkillTracker().getGainedExperience(Skill.RANGED),
+                xgMag = context.getSkillTracker().getGainedExperience(Skill.MAGIC);
+
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.drawImage(backgroundImage, 305, 347, null);
+
+        graphics.setFont(new Font("Magneto", Font.BOLD, 15));
+        graphics.setColor(new Color(0x00, 0x66, 0x00));
+        graphics.drawString("Ganja Combat Bot", 264, 365);
+
+        graphics.setFont(new Font("Consolas", Font.PLAIN, 15));
+        graphics.setColor(Color.BLACK);
+
+        graphics.drawString("v" + GanjaCombatBotMain.VERSION, 420, 365);
+        graphics.drawImage(ganjaIcon, 470, 347, null);
+
+        graphics.drawString("        Run Time:", 280, 382);
+        graphics.drawString("           XP/hr:", 280, 399);
+        graphics.drawString("       XP gained:", 280, 416);
+        graphics.drawString(String.format("Atk: %s  Str: %s  Def: %s",
+                context.getSkills().getRealLevel(Skill.ATTACK), context.getSkills().getRealLevel(Skill.STRENGTH), context.getSkills().getRealLevel(Skill.DEFENCE)),
+                280, 433);
+        if (GlobalSettings.BURY_BONES) {
+            graphics.drawString("Prayer XP gained:", 280, 450);
+        }
+
+        graphics.drawString(context.getTimer().formatTime(), 420, 382); // Runtime
+        graphics.drawString((xhAtk + xhStr + xhDef + xhHit + xhRan + xhMag) + " XP", 420, 399); // XP / hr
+        graphics.drawString((xgAtk + xgStr + xgDef + xgHit + xgRan + xgMag) + " XP", 420, 416); // XP gained
+        graphics.drawString(context.getSkillTracker().getGainedExperience(Skill.PRAYER) + " XP", 420, 450);
     }
 }

@@ -6,6 +6,9 @@ import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
+import org.dreambot.api.utilities.Timer;
+
+import java.awt.*;
 
 @ScriptManifest(author = "GanjaSmuggler", category = Category.COMBAT, name = "Ganja Combat Bot", description = "", version = 1.0)
 public class GanjaCombatBotMain extends AbstractScript {
@@ -14,10 +17,12 @@ public class GanjaCombatBotMain extends AbstractScript {
     private StateScheduler stateScheduler;
     private BotGUI botGUI;
     private boolean isStarted = false;
+    private Timer timer;
 
     @Override
     public void onStart() {
         super.onStart();
+        timer = new Timer();
         botGUI = new BotGUI(this, "Ganja Combat Bot");
         stateScheduler = new StateScheduler(this, new StartState());
     }
@@ -37,6 +42,13 @@ public class GanjaCombatBotMain extends AbstractScript {
         super.onExit();
     }
 
+    @Override
+    public void onPaint(Graphics2D graphics2D) {
+        if (isStarted) {
+            botGUI.DrawInGameGUI(graphics2D);
+        }
+    }
+
     public void setStarted(boolean isStarted) {
         this.isStarted = isStarted;
     }
@@ -44,4 +56,6 @@ public class GanjaCombatBotMain extends AbstractScript {
     public boolean isStarted() {
         return isStarted;
     }
+
+    public Timer getTimer() { return timer; }
 }
