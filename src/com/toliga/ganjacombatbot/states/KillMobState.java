@@ -60,6 +60,11 @@ public class KillMobState implements State {
             }
         }
 
+        if (context.getLocalPlayer().getHealthPercent() < GlobalSettings.HEALTH_PERCENT) {
+            context.getInventory().interact(GlobalSettings.FOOD_NAMES[Calculations.random(GlobalSettings.FOOD_NAMES.length)], "Eat");
+            interacting = false;
+        }
+
         return false;
     }
 

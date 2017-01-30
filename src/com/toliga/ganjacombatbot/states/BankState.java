@@ -8,13 +8,21 @@ import org.dreambot.api.script.AbstractScript;
 
 public class BankState implements State {
 
-    private int index = 0;
+    private int itemIndex = 0;
+    private int foodIntex = 0;
     private boolean bankIsOpen = false;
+    private boolean getFood = false;
+    private boolean finishedFood = false;
+    private boolean finishedItem = false;
 
     @Override
     public boolean execute(AbstractScript context) {
         AbstractScript.log("BANK");
         Utilities.OpenTab(context, Tab.INVENTORY);
+
+        if (!getFood) {
+            finishedFood = true;
+        }
 
         if (!bankIsOpen && context.getBank().open()) {
             AbstractScript.sleepUntil(() -> context.getBank().isOpen(), 9000);
@@ -22,14 +30,30 @@ public class BankState implements State {
         }
 
         if (context.getBank().isOpen()) {
-            String itemName = GlobalSettings.LOOT_NAMES[index];
-            AbstractScript.log("Item name: " + itemName);
-            context.getBank().depositAll(itemName);
-            AbstractScript.sleepUntil(() -> !context.getInventory().contains(itemName), 3000);
-            index++;
+            if (GlobalSettings.BANK_WHEN_FULL && itemIndex < GlobalSettings.LOOT_NAMES.length) {
+                String itemName = GlobalSettings.LOOT_NAMES[itemIndex];
+                AbstractScript.log("Item name: " + itemName);
+                context.getBank().depositAll(itemName);
+                AbstractScript.sleepUntil(() -> !context.getInventory().contains(itemName), 3000);
+                itemIndex++;
+            } else {
+                finishedItem = true;
+            }
+
+            if (getFood) {
+                if (foodIntex < GlobalSettings.LOOT_NAMES.length) {
+                    String foodName = GlobalSettings.FOOD_NAMES[foodIntex];
+                    AbstractScript.log("Food name: " + foodName);
+                    context.getBank().withdraw(foodName, GlobalSettings.FOOD_AMOUNT);
+                    AbstractScript.sleepUntil(() -> context.getInventory().contains(foodName), 3000);
+                    foodIntex++;
+                } else {
+                    finishedFood = true;
+                }
+            }
         }
 
-        if (index >= GlobalSettings.LOOT_NAMES.length) {
+        if (finishedFood && finishedItem) {
             if (context.getBank().close()) {
                 AbstractScript.sleepUntil(() -> !context.getBank().isOpen(), 8000);
                 return true;
@@ -42,5 +66,9 @@ public class BankState implements State {
     @Override
     public State next() {
         return new WalkFromBankState();
+    }
+
+    public void setGetFood(boolean getFood) {
+        this.getFood = getFood;
     }
 }

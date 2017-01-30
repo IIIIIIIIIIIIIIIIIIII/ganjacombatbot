@@ -2,6 +2,7 @@ package com.toliga.ganjacombatbot.states;
 
 import com.toliga.ganjabots.core.State;
 import com.toliga.ganjabots.core.Utilities;
+import com.toliga.ganjacombatbot.GlobalSettings;
 import org.dreambot.api.methods.map.Area;
 import org.dreambot.api.script.AbstractScript;
 
@@ -25,6 +26,10 @@ public class WalkToBankState implements State {
 
     @Override
     public State next() {
-        return new BankState();
+        BankState bankState = new BankState();
+        if (GlobalSettings.EAT_FOOD) {
+            bankState.setGetFood(true);
+        }
+        return bankState;
     }
 }

@@ -19,12 +19,25 @@ public class CheckInventoryState implements State {
                 GlobalSettings.SOURCE_TILE = context.getLocalPlayer().getTile();
                 nextState = new WalkToBankState();
             } else if (GlobalSettings.LOGOUT_WHEN_FULL) {
-                // new LogoutState();
+                // TODO: Implement new LogoutState() state.
             } else {
                 GlobalSettings.LOOT = false;
             }
         } else {
-            nextState = new KillMobState();
+            int noFoodCounter = 0;
+
+            for (String food : GlobalSettings.FOOD_NAMES) {
+                if (context.getInventory().count(food) == 0) {
+                    noFoodCounter++;
+                }
+            }
+
+            if (noFoodCounter == GlobalSettings.FOOD_NAMES.length) {
+                GlobalSettings.SOURCE_TILE = context.getLocalPlayer().getTile();
+                nextState = new WalkToBankState();
+            } else {
+                nextState = new KillMobState();
+            }
         }
 
         return true;

@@ -24,9 +24,9 @@ public class BotGUI extends JFrame {
     private JCheckBox bankWhenFullCheckBox;
     private JCheckBox logoutWhenFullCheckBox;
     private JCheckBox buryBonesCheckBox;
-    private JTextField textField3;
-    private JSlider slider1;
-    private JTextField textField4;
+    private JTextField foodTextField;
+    private JSlider healthSlider;
+    private JTextField foodAmountTextField;
     private JCheckBox checkBox4;
     private JCheckBox checkBox5;
     private JCheckBox checkBox6;
@@ -57,7 +57,7 @@ public class BotGUI extends JFrame {
     }
 
     private void initializeComponents() {
-        backgroundImage = Utilities.LoadImage("http://i63.tinypic.com/2j48v94.png", 190, 111);
+        backgroundImage = Utilities.LoadImage("http://i63.tinypic.com/2j48v94.png", 230, 111);
         ganjaIcon = Utilities.LoadImage("http://ai-i1.infcdn.net/icons_siandroid/png/200/1138/1138962.png", 20, 20);
         btnStart.setIcon(new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/buttons/512/Icon_3-128.png", 35, 35)));
         btnStop.setIcon(new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/buttons/512/Icon_5-128.png", 35, 35)));
@@ -70,10 +70,7 @@ public class BotGUI extends JFrame {
 
     private void registerEvents() {
         btnStart.addActionListener(event -> {
-            context.setStarted(true);
-            btnStart.setEnabled(false);
-            btnStop.setEnabled(true);
-
+            /********************MOB NAMES*******************/
             String mobs[] = mobNameTextField.getText().split(",");
 
             for (int i = 0; i < mobs.length; i++) {
@@ -82,6 +79,7 @@ public class BotGUI extends JFrame {
 
             GlobalSettings.MOB_NAMES = mobs;
 
+            /******************LOOT NAMES*******************/
             String loots[] = lootTextField.getText().split(",");
 
             for (int i = 0; i < loots.length; i++) {
@@ -89,12 +87,30 @@ public class BotGUI extends JFrame {
             }
 
             GlobalSettings.LOOT_NAMES = loots;
+
+            /*******************FOOD NAMES*******************/
+            String foods[] = foodTextField.getText().split(",");
+
+            for (int i = 0; i < foods.length; i++) {
+                foods[i] = foods[i].trim();
+            }
+
+            GlobalSettings.FOOD_NAMES = foods;
+            GlobalSettings.FOOD_AMOUNT = Integer.parseInt(foodAmountTextField.getText());
+
+            context.setStarted(true);
+            btnStart.setEnabled(false);
+            btnStop.setEnabled(true);
         });
 
         btnStop.addActionListener(event -> {
             context.setStarted(false);
             btnStop.setEnabled(false);
             btnStart.setEnabled(true);
+        });
+
+        healthSlider.addChangeListener(event -> {
+            GlobalSettings.HEALTH_PERCENT = ((JSlider) event.getSource()).getValue();
         });
 
         powerkillCheckBox.addChangeListener(event -> {
@@ -148,7 +164,7 @@ public class BotGUI extends JFrame {
                 xgMag = context.getSkillTracker().getGainedExperience(Skill.MAGIC);
 
         graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        graphics.drawImage(backgroundImage, 305, 347, null);
+        graphics.drawImage(backgroundImage, 264, 347, null);
 
         graphics.setFont(new Font("Magneto", Font.BOLD, 15));
         graphics.setColor(new Color(0x00, 0x66, 0x00));
@@ -173,6 +189,8 @@ public class BotGUI extends JFrame {
         graphics.drawString(context.getTimer().formatTime(), 420, 382); // Runtime
         graphics.drawString((xhAtk + xhStr + xhDef + xhHit + xhRan + xhMag) + " XP", 420, 399); // XP / hr
         graphics.drawString((xgAtk + xgStr + xgDef + xgHit + xgRan + xgMag) + " XP", 420, 416); // XP gained
-        graphics.drawString(context.getSkillTracker().getGainedExperience(Skill.PRAYER) + " XP", 420, 450);
+        if (GlobalSettings.BURY_BONES) {
+            graphics.drawString(context.getSkillTracker().getGainedExperience(Skill.PRAYER) + " XP", 420, 450); // Prayer XP gained
+        }
     }
 }

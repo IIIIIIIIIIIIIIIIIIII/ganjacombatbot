@@ -9,6 +9,7 @@ public class WalkFromBankState implements State {
 
     @Override
     public boolean execute(AbstractScript context) {
+        AbstractScript.log("WALK_FROM_BANK");
         if (!(GlobalSettings.SOURCE_TILE.distance(context.getLocalPlayer().getTile()) < 2)) {
             Utilities.GoToTile(context, GlobalSettings.SOURCE_TILE);
             return false;
