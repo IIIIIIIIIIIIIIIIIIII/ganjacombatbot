@@ -80,23 +80,27 @@ public class BotGUI extends JFrame {
             GlobalSettings.MOB_NAMES = mobs;
 
             /******************LOOT NAMES*******************/
-            String loots[] = lootTextField.getText().split(",");
+            if (GlobalSettings.LOOT) {
+                String loots[] = lootTextField.getText().split(",");
 
-            for (int i = 0; i < loots.length; i++) {
-                loots[i] = loots[i].trim();
+                for (int i = 0; i < loots.length; i++) {
+                    loots[i] = loots[i].trim();
+                }
+
+                GlobalSettings.LOOT_NAMES = loots;
             }
-
-            GlobalSettings.LOOT_NAMES = loots;
 
             /*******************FOOD NAMES*******************/
-            String foods[] = foodTextField.getText().split(",");
+            if (GlobalSettings.EAT_FOOD) {
+                String foods[] = foodTextField.getText().split(",");
 
-            for (int i = 0; i < foods.length; i++) {
-                foods[i] = foods[i].trim();
+                for (int i = 0; i < foods.length; i++) {
+                    foods[i] = foods[i].trim();
+                }
+
+                GlobalSettings.FOOD_NAMES = foods;
+                GlobalSettings.FOOD_AMOUNT = foodAmountTextField.getText().equals("") ? 0 : Integer.parseInt(foodAmountTextField.getText());
             }
-
-            GlobalSettings.FOOD_NAMES = foods;
-            GlobalSettings.FOOD_AMOUNT = Integer.parseInt(foodAmountTextField.getText());
 
             context.setStarted(true);
             btnStart.setEnabled(false);

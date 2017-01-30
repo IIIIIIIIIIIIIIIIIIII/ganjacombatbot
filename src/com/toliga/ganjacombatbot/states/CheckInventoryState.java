@@ -26,15 +26,19 @@ public class CheckInventoryState implements State {
         } else {
             int noFoodCounter = 0;
 
-            for (String food : GlobalSettings.FOOD_NAMES) {
-                if (context.getInventory().count(food) == 0) {
-                    noFoodCounter++;
+            if (GlobalSettings.EAT_FOOD && GlobalSettings.FOOD_AMOUNT > 0) {
+                for (String food : GlobalSettings.FOOD_NAMES) {
+                    if (context.getInventory().count(food) == 0) {
+                        noFoodCounter++;
+                    }
                 }
-            }
 
-            if (noFoodCounter == GlobalSettings.FOOD_NAMES.length) {
-                GlobalSettings.SOURCE_TILE = context.getLocalPlayer().getTile();
-                nextState = new WalkToBankState();
+                if (noFoodCounter == GlobalSettings.FOOD_NAMES.length) {
+                    GlobalSettings.SOURCE_TILE = context.getLocalPlayer().getTile();
+                    nextState = new WalkToBankState();
+                } else {
+                    nextState = new KillMobState();
+                }
             } else {
                 nextState = new KillMobState();
             }

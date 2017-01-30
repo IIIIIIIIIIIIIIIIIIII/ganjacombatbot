@@ -13,6 +13,7 @@ public class TakeLootState implements State {
     @Override
     public boolean execute(AbstractScript context) {
         AbstractScript.log("TAKE_LOOT");
+        AbstractScript.log("Item name: " + GlobalSettings.LOOT_NAMES[index]);
         GroundItem currentLoot = context.getGroundItems().closest(item -> item.distance() < 3
                 && item.getName().equalsIgnoreCase(GlobalSettings.LOOT_NAMES[index]));
         previousLootCount = context.getInventory().count(GlobalSettings.LOOT_NAMES[index]);
@@ -20,10 +21,8 @@ public class TakeLootState implements State {
         if (currentLoot != null) {
             currentLoot.interact("Take");
             AbstractScript.sleepUntil(() -> previousLootCount < context.getInventory().count(GlobalSettings.LOOT_NAMES[index]), 3000);
-            index++;
-        } else {
-            index++;
         }
+        index++;
 
         return index >= GlobalSettings.LOOT_NAMES.length;
     }
