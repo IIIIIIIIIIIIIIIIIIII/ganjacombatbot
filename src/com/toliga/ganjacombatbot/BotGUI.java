@@ -184,18 +184,18 @@ public class BotGUI extends JFrame {
         graphics.drawString("        Run Time:", 280, 382);
         graphics.drawString("           XP/hr:", 280, 399);
         graphics.drawString("       XP gained:", 280, 416);
-        graphics.drawString(String.format("Atk: %s  Str: %s  Def: %s",
-                context.getSkills().getRealLevel(Skill.ATTACK), context.getSkills().getRealLevel(Skill.STRENGTH), context.getSkills().getRealLevel(Skill.DEFENCE)),
-                280, 433);
+        //graphics.drawString(String.format("Atk: %s  Str: %s  Def: %s",
+        //        context.getSkills().getRealLevel(Skill.ATTACK), context.getSkills().getRealLevel(Skill.STRENGTH), context.getSkills().getRealLevel(Skill.DEFENCE)),
+        //        280, 433);
         if (GlobalSettings.BURY_BONES) {
-            graphics.drawString("Prayer XP gained:", 280, 450);
+            graphics.drawString("Prayer XP gained:", 280, 433);
         }
 
         graphics.drawString(context.getTimer().formatTime(), 420, 382); // Runtime
         graphics.drawString((xhAtk + xhStr + xhDef + xhHit + xhRan + xhMag) + " XP", 420, 399); // XP / hr
         graphics.drawString((xgAtk + xgStr + xgDef + xgHit + xgRan + xgMag) + " XP", 420, 416); // XP gained
         if (GlobalSettings.BURY_BONES) {
-            graphics.drawString(context.getSkillTracker().getGainedExperience(Skill.PRAYER) + " XP", 420, 450); // Prayer XP gained
+            graphics.drawString(context.getSkillTracker().getGainedExperience(Skill.PRAYER) + " XP", 420, 433); // Prayer XP gained
         }
     }
 }
