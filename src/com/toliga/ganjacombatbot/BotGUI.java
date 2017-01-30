@@ -99,7 +99,8 @@ public class BotGUI extends JFrame {
                 }
 
                 GlobalSettings.FOOD_NAMES = foods;
-                GlobalSettings.FOOD_AMOUNT = foodAmountTextField.getText().equals("") ? 0 : Integer.parseInt(foodAmountTextField.getText());
+                GlobalSettings.FOOD_AMOUNT = foodAmountTextField.getText().isEmpty() ? 0 : Integer.parseInt(foodAmountTextField.getText());
+                GlobalSettings.HEALTH_PERCENT = healthSlider.getValue();
             }
 
             context.setStarted(true);

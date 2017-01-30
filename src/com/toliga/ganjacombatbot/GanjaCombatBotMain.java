@@ -12,7 +12,7 @@ import java.awt.*;
 
 @ScriptManifest(author = "GanjaSmuggler", category = Category.COMBAT, name = "Ganja Combat Bot", description = "", version = 1.0)
 public class GanjaCombatBotMain extends AbstractScript {
-    public static final String VERSION = "0.2.2";
+    public static final String VERSION = "0.2.3";
 
     private StateScheduler stateScheduler;
     private BotGUI botGUI;

@@ -57,6 +57,10 @@ public class KillMobState implements State {
                     interacting = false;
                     npc = null;
                 }
+
+                if (context.getLocalPlayer().isStandingStill()) {
+                    interacting = false;
+                }
             }
         }
 

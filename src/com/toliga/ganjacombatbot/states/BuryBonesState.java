@@ -16,7 +16,7 @@ public class BuryBonesState implements State {
         if (context.getInventory().contains("Bones")) {
             context.getInventory().interact("Bones", "Bury");
             AbstractScript.sleepUntil(() -> context.getInventory().count("Bones") < boneCount, 2000);
-            AbstractScript.sleep(Calculations.random(600, 750));
+            AbstractScript.sleep(Calculations.random(600, 680));
             return false;
         }
         return true;
