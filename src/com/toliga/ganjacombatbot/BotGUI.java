@@ -121,12 +121,14 @@ public class BotGUI extends JFrame {
         powerkillCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.POWERKILL = source.isSelected();
+            lootCheckBox.setSelected(!source.isSelected());
             lootCheckBox.setEnabled(!source.isSelected());
         });
 
         lootCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.LOOT = source.isSelected();
+            powerkillCheckBox.setSelected(!source.isSelected());
             powerkillCheckBox.setEnabled(!source.isSelected());
             tabbedPaneMenu.setEnabledAt(1, source.isSelected());
         });

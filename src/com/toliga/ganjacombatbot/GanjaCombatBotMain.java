@@ -47,6 +47,7 @@ public class GanjaCombatBotMain extends AbstractScript {
         if (isStarted) {
             botGUI.DrawInGameGUI(graphics2D);
         }
+        super.onPaint(graphics2D);
     }
 
     public void setStarted(boolean isStarted) {
