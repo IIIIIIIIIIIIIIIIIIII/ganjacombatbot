@@ -1,6 +1,7 @@
 package com.toliga.ganjacombatbot.states;
 
 import com.toliga.ganjabots.core.State;
+import com.toliga.ganjacombatbot.FileManager;
 import org.dreambot.api.script.AbstractScript;
 
 public class StartState implements State {
@@ -11,6 +12,7 @@ public class StartState implements State {
 
         context.getSkillTracker().resetAll();
         context.getSkillTracker().start();
+
         return true;
     }
 
