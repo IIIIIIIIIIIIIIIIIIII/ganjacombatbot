@@ -127,7 +127,9 @@ public class BotGUI extends JFrame {
             context.setStarted(true);
             btnStart.setEnabled(false);
             btnStop.setEnabled(true);
-            saveManager.save();
+            if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                saveManager.save();
+            }
         });
 
         btnStop.addActionListener(event -> {

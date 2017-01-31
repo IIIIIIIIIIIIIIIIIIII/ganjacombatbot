@@ -23,8 +23,10 @@ public class GanjaCombatBotMain extends AbstractScript {
     public void onStart() {
         super.onStart();
         timer = new Timer();
-        SaveManager saveManager = new SaveManager();
-        saveManager.load();
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            SaveManager saveManager = new SaveManager();
+            saveManager.load();
+        }
         botGUI = new BotGUI(this, "Ganja Combat Bot");
         stateScheduler = new StateScheduler(this, new StartState());
     }
