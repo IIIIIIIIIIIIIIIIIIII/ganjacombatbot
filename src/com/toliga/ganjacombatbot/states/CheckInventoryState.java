@@ -13,7 +13,7 @@ public class CheckInventoryState implements State {
         AbstractScript.log("CHECK_INVENTORY");
 
         if (context.getInventory().isFull()) {
-            if (GlobalSettings.BURY_BONES) {
+            if (GlobalSettings.BURY_BONES && context.getInventory().contains("Bones")) {
                 nextState = new BuryBonesState();
             } else if (GlobalSettings.BANK_WHEN_FULL) {
                 GlobalSettings.SOURCE_TILE = context.getLocalPlayer().getTile();
