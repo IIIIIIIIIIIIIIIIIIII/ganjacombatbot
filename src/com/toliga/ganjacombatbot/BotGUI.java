@@ -148,7 +148,7 @@ public class BotGUI extends JFrame {
             if (source.isSelected()) {
                 lootCheckBox.setSelected(!source.isSelected());
             }
-            lootCheckBox.setEnabled(!source.isSelected());
+            // lootCheckBox.setEnabled(!source.isSelected());
         });
 
         lootCheckBox.addChangeListener(event -> {
@@ -157,7 +157,7 @@ public class BotGUI extends JFrame {
             if (source.isSelected()) {
                 powerkillCheckBox.setSelected(!source.isSelected());
             }
-            powerkillCheckBox.setEnabled(!source.isSelected());
+            //powerkillCheckBox.setEnabled(!source.isSelected());
             tabbedPaneMenu.setEnabledAt(1, source.isSelected());
         });
 
