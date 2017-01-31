@@ -2,6 +2,7 @@ package com.toliga.ganjacombatbot;
 
 import com.toliga.ganjabots.core.Utilities;
 import org.dreambot.api.methods.skills.Skill;
+import org.dreambot.api.methods.walking.path.impl.GlobalPath;
 import org.dreambot.api.script.AbstractScript;
 
 import javax.swing.*;
@@ -42,9 +43,11 @@ public class BotGUI extends JFrame {
     private GanjaCombatBotMain context;
     private Image backgroundImage;
     private Image ganjaIcon;
+    private SaveManager saveManager;
 
     public BotGUI(AbstractScript context, String title) {
         this.context = (GanjaCombatBotMain) context;
+        saveManager = new SaveManager();
         setTitle(title);
         setContentPane(rootPane);
         pack();
@@ -66,6 +69,24 @@ public class BotGUI extends JFrame {
         tabbedPaneMenu.setEnabledAt(1, false);
         tabbedPaneMenu.setEnabledAt(2, false);
         tabbedPaneMenu.setEnabledAt(3, false);
+
+        if (GlobalSettings.MOB_NAMES != null) {
+            for (String mob : GlobalSettings.MOB_NAMES) {
+                mobNameTextField.setText(mobNameTextField.getText() + mob + ",");
+            }
+        }
+
+        if (GlobalSettings.LOOT_NAMES != null) {
+            for (String loot : GlobalSettings.LOOT_NAMES) {
+                lootTextField.setText(lootTextField.getText() + loot + ",");
+            }
+        }
+
+        if (GlobalSettings.FOOD_NAMES != null) {
+            for (String food : GlobalSettings.FOOD_NAMES) {
+                foodTextField.setText(foodTextField.getText() + food + ",");
+            }
+        }
     }
 
     private void registerEvents() {
@@ -106,6 +127,7 @@ public class BotGUI extends JFrame {
             context.setStarted(true);
             btnStart.setEnabled(false);
             btnStop.setEnabled(true);
+            saveManager.save();
         });
 
         btnStop.addActionListener(event -> {
@@ -121,14 +143,18 @@ public class BotGUI extends JFrame {
         powerkillCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.POWERKILL = source.isSelected();
-            lootCheckBox.setSelected(!source.isSelected());
+            if (source.isSelected()) {
+                lootCheckBox.setSelected(!source.isSelected());
+            }
             lootCheckBox.setEnabled(!source.isSelected());
         });
 
         lootCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.LOOT = source.isSelected();
-            powerkillCheckBox.setSelected(!source.isSelected());
+            if (source.isSelected()) {
+                powerkillCheckBox.setSelected(!source.isSelected());
+            }
             powerkillCheckBox.setEnabled(!source.isSelected());
             tabbedPaneMenu.setEnabledAt(1, source.isSelected());
         });

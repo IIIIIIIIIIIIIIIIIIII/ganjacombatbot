@@ -4,6 +4,7 @@ import java.io.*;
 
 public class FileManager {
     private BufferedReader reader;
+    private BufferedWriter writer;
     private String fileName;
 
     public FileManager(String fileName) {
@@ -11,7 +12,7 @@ public class FileManager {
     }
 
     public void writeLineToFile(String data) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
+        try {
             writer.write(data + "\r\n");
         } catch (IOException e) {
             e.printStackTrace();
@@ -20,12 +21,44 @@ public class FileManager {
 
     public String readLineFromFile() {
         String line = null;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        try {
             line = reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return line;
+    }
+
+    public void openWriter() {
+        try {
+            writer = new BufferedWriter(new FileWriter(fileName, false));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openReader() {
+        try {
+            reader = new BufferedReader(new FileReader(fileName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeReader() {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeWriter() {
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isFileExists() {
