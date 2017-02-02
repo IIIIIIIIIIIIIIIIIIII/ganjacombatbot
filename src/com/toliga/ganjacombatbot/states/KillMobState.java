@@ -54,14 +54,14 @@ public class KillMobState implements State {
             }
 
             if (interacting) {
-                if (!npc.isInteracting(context.getLocalPlayer()) && npc.isInCombat()) {
-                    interacting = false;
-                    npc = null;
-                }
-
                 if (!context.getMap().canReach(npc)) {
                     interacting = false;
                     AbstractScript.log("Can't reach.");
+                }
+
+                if (!npc.isInteracting(context.getLocalPlayer()) && npc.isInCombat()) {
+                    interacting = false;
+                    npc = null;
                 }
             }
         }

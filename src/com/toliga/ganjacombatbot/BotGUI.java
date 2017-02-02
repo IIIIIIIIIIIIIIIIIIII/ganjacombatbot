@@ -113,15 +113,19 @@ public class BotGUI extends JFrame {
 
             /*******************FOOD NAMES*******************/
             if (GlobalSettings.EAT_FOOD) {
-                String foods[] = foodTextField.getText().split(",");
+                if (!foodTextField.getText().isEmpty()) {
+                    String foods[] = foodTextField.getText().split(",");
 
-                for (int i = 0; i < foods.length; i++) {
-                    foods[i] = foods[i].trim();
+                    for (int i = 0; i < foods.length; i++) {
+                        foods[i] = foods[i].trim();
+                    }
+
+                    GlobalSettings.FOOD_NAMES = foods;
+                    GlobalSettings.FOOD_AMOUNT = foodAmountTextField.getText().isEmpty() ? 0 : Integer.parseInt(foodAmountTextField.getText());
+                    GlobalSettings.HEALTH_PERCENT = healthSlider.getValue();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please specify the food names.", "Ganja Combat Bot - Food", JOptionPane.WARNING_MESSAGE);
                 }
-
-                GlobalSettings.FOOD_NAMES = foods;
-                GlobalSettings.FOOD_AMOUNT = foodAmountTextField.getText().isEmpty() ? 0 : Integer.parseInt(foodAmountTextField.getText());
-                GlobalSettings.HEALTH_PERCENT = healthSlider.getValue();
             }
 
             context.setStarted(true);
