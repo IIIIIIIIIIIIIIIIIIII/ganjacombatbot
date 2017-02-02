@@ -232,6 +232,8 @@
                 </constraints>
                 <properties>
                   <majorTickSpacing value="10"/>
+                  <paintLabels value="true"/>
+                  <paintTicks value="true"/>
                 </properties>
               </component>
               <grid id="eccc" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">

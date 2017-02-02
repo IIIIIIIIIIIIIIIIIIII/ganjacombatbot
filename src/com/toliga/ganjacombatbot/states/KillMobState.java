@@ -28,6 +28,7 @@ public class KillMobState implements State {
             } else {
                 npc = context.getNpcs().closest((npc) -> npc.getName().equalsIgnoreCase(GlobalSettings.MOB_NAMES[Calculations.random(GlobalSettings.MOB_NAMES.length)])
                         && npc.canAttack()
+                        && context.getMap().canReach(npc)
                         && !npc.isInCombat()
                         && !npc.isInteractedWith()
                         && npc.exists());
@@ -58,8 +59,9 @@ public class KillMobState implements State {
                     npc = null;
                 }
 
-                if (context.getLocalPlayer().isStandingStill()) {
+                if (!context.getMap().canReach(npc)) {
                     interacting = false;
+                    AbstractScript.log("Can't reach.");
                 }
             }
         }
