@@ -18,6 +18,14 @@ public class GlobalSettings {
     public static boolean BANK_WHEN_FULL = false;
     public static boolean LOGOUT_WHEN_FULL = false;
     public static boolean BURY_BONES = false;
+    public static boolean COMBAT_POTION = false;
+    public static boolean STRENGTH_POTION = false;
+    public static boolean DEFENCE_POTION = false;
+    public static boolean ATTACK_POTION = false;
+    public static boolean SUPER_COMBAT_POTION = false;
+    public static boolean SUPER_STRENGTH_POTION = false;
+    public static boolean SUPER_DEFENCE_POTION = false;
+    public static boolean SUPER_ATTACK_POTION = false;
 
     public static Tile SOURCE_TILE = null;
 }

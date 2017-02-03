@@ -12,16 +12,11 @@ public class WalkToBankState implements State {
     @Override
     public boolean execute(AbstractScript context) {
         AbstractScript.log("WALK_TO_BANK");
-        String bankName = context.getBank().getClosestBankLocation().name();
 
         Area destinationArea = context.getBank().getClosestBankLocation().getArea(1);
 
         if (!destinationArea.contains(context.getLocalPlayer())) {
             Utilities.GoToArea(context, destinationArea);
-
-            if (bankName.equals("LUMBRIDGE")) {
-                AbstractScript.sleep(2000);
-            }
             return false;
         }
 

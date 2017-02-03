@@ -36,13 +36,18 @@ public class KillMobState implements State {
             if (npc != null) {
                 AbstractScript.log("Chosen: " + npc.getName());
             }
-        } else if (npc != null && (GlobalSettings.LOOT ? !npc.exists() : npc.getHealthPercent() == 0)) {
+        } else if (npc != null && npc.getHealthPercent() == 0) {
             if (GlobalSettings.LOOT) {
                 nextState = new TakeLootState();
             } else {
                 nextState = new CheckInventoryState();
             }
             return true;
+        }
+
+        if (context.getWalking().getRunEnergy() >= 80) {
+            if (!context.getWalking().isRunEnabled())
+                context.getWalking().toggleRun();
         }
 
         if (npc != null) {
@@ -54,6 +59,11 @@ public class KillMobState implements State {
             }
 
             if (interacting) {
+                if (context.getLocalPlayer().isStandingStill()) {
+                    interacting = false;
+                    AbstractScript.log("Standing still.");
+                }
+
                 if (!context.getMap().canReach(npc)) {
                     interacting = false;
                     AbstractScript.log("Can't reach.");
@@ -69,7 +79,7 @@ public class KillMobState implements State {
         if (context.getLocalPlayer().getHealthPercent() < GlobalSettings.HEALTH_PERCENT) {
             int previousHealth = context.getLocalPlayer().getHealthPercent();
             context.getInventory().interact(GlobalSettings.FOOD_NAMES[Calculations.random(GlobalSettings.FOOD_NAMES.length)], "Eat");
-            AbstractScript.sleepUntil(() -> context.getLocalPlayer().getHealthPercent() != previousHealth, 2000);
+            AbstractScript.sleepUntil(() -> context.getLocalPlayer().getHealthPercent() > previousHealth, 2000);
             interacting = false;
         }
 

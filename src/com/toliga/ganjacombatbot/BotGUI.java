@@ -28,18 +28,19 @@ public class BotGUI extends JFrame {
     private JTextField foodTextField;
     private JSlider healthSlider;
     private JTextField foodAmountTextField;
-    private JCheckBox checkBox4;
-    private JCheckBox checkBox5;
-    private JCheckBox checkBox6;
-    private JCheckBox checkBox7;
-    private JCheckBox checkBox8;
-    private JCheckBox checkBox9;
-    private JCheckBox checkBox10;
+    private JCheckBox combatCheckBox;
+    private JCheckBox strengthCheckBox;
+    private JCheckBox defenceCheckBox;
+    private JCheckBox attackCheckBox;
+    private JCheckBox superStrengthCheckBox;
+    private JCheckBox superDefenceCheckBox;
+    private JCheckBox superAttackCheckBox;
     private JTextField textField5;
     private JLabel infoLabel;
     private JPanel lootingPanel;
     private JPanel foodPanel;
     private JPanel potionPanel;
+    private JCheckBox superCombatCheckBox;
     private GanjaCombatBotMain context;
     private Image backgroundImage;
     private Image ganjaIcon;
@@ -68,7 +69,6 @@ public class BotGUI extends JFrame {
         btnStop.setEnabled(false);
         tabbedPaneMenu.setEnabledAt(1, false);
         tabbedPaneMenu.setEnabledAt(2, false);
-        tabbedPaneMenu.setEnabledAt(3, false);
 
         if (GlobalSettings.MOB_NAMES != null) {
             for (String mob : GlobalSettings.MOB_NAMES) {
@@ -184,6 +184,51 @@ public class BotGUI extends JFrame {
         buryBonesCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.BURY_BONES = source.isSelected();
+        });
+
+        usePotionCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.USE_POTION = source.isSelected();
+        });
+
+        combatCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.COMBAT_POTION = source.isSelected();
+        });
+
+        strengthCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.STRENGTH_POTION = source.isSelected();
+        });
+
+        defenceCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.DEFENCE_POTION = source.isSelected();
+        });
+
+        attackCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.ATTACK_POTION = source.isSelected();
+        });
+
+        superCombatCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.SUPER_COMBAT_POTION = source.isSelected();
+        });
+
+        superStrengthCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.SUPER_STRENGTH_POTION = source.isSelected();
+        });
+
+        superDefenceCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.SUPER_DEFENCE_POTION = source.isSelected();
+        });
+
+        superAttackCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.SUPER_ATTACK_POTION = source.isSelected();
         });
     }
 

@@ -24,9 +24,9 @@ public class CheckInventoryState implements State {
                 GlobalSettings.LOOT = false;
             }
         } else {
-            int noFoodCounter = 0;
 
             if (GlobalSettings.EAT_FOOD && GlobalSettings.FOOD_AMOUNT > 0) {
+                int noFoodCounter = 0;
                 for (String food : GlobalSettings.FOOD_NAMES) {
                     if (context.getInventory().count(food) == 0) {
                         noFoodCounter++;
@@ -38,10 +38,18 @@ public class CheckInventoryState implements State {
                     nextState = new WalkToBankState();
                 } else {
                     nextState = new KillMobState();
+                    if (GlobalSettings.USE_POTION && context.getInventory().contains(item -> item.getName().contains("potion"))) {
+                        nextState = new UsePotionState();
+                    }
                 }
             } else {
                 nextState = new KillMobState();
+                if (GlobalSettings.USE_POTION && context.getInventory().contains(item -> item.getName().contains("potion"))) {
+                    nextState = new UsePotionState();
+                }
             }
+
+
         }
 
         return true;
