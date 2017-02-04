@@ -59,10 +59,11 @@ public class KillMobState implements State {
             }
 
             if (interacting) {
-                if (context.getLocalPlayer().isStandingStill()) {
-                    interacting = false;
-                    AbstractScript.log("Standing still.");
-                }
+                //if (context.getLocalPlayer().isStandingStill()) {
+                //    interacting = false;
+                //    AbstractScript.log("Standing still.");
+                //}
+                AbstractScript.log("Interacting...");
 
                 if (!context.getMap().canReach(npc)) {
                     interacting = false;

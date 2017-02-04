@@ -56,10 +56,11 @@ public class UsePotionState implements State {
     }
 
     private void drinkPotion(AbstractScript context, String potionName) {
-
-        for (int potionCount = 1; potionCount < 5; potionCount++) {
-            if (context.getInventory().interact(potionName + "(" + potionCount + ")", "Drink")) {
-                return;
+        if (!context.getInventory().interact(potionName + "(1)", "Drink")) {
+            if (!context.getInventory().interact(potionName + "(2)", "Drink")) {
+                if (!context.getInventory().interact(potionName + "(3)", "Drink")) {
+                    context.getInventory().interact(potionName + "(4)", "Drink");
+                }
             }
         }
     }
