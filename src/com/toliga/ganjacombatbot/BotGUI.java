@@ -2,7 +2,6 @@ package com.toliga.ganjacombatbot;
 
 import com.toliga.ganjabots.core.Utilities;
 import org.dreambot.api.methods.skills.Skill;
-import org.dreambot.api.methods.walking.path.impl.GlobalPath;
 import org.dreambot.api.script.AbstractScript;
 
 import javax.swing.*;
@@ -41,6 +40,15 @@ public class BotGUI extends JFrame {
     private JPanel foodPanel;
     private JPanel potionPanel;
     private JCheckBox superCombatCheckBox;
+    private JCheckBox useAntibanCheckBox;
+    private JSlider slider1;
+    private JSlider slider2;
+    private JSlider slider3;
+    private JCheckBox interactionResponseCheckBox;
+    private JTextField textField1;
+    private JTextField mouseTextField;
+    private JTextField cameraTextField;
+    private JButton applyNowButton;
     private GanjaCombatBotMain context;
     private Image backgroundImage;
     private Image ganjaIcon;
@@ -69,6 +77,8 @@ public class BotGUI extends JFrame {
         btnStop.setEnabled(false);
         tabbedPaneMenu.setEnabledAt(1, false);
         tabbedPaneMenu.setEnabledAt(2, false);
+        tabbedPaneMenu.setEnabledAt(3, false);
+        tabbedPaneMenu.setEnabledAt(4, false);
 
         if (GlobalSettings.MOB_NAMES != null) {
             for (String mob : GlobalSettings.MOB_NAMES) {
@@ -181,6 +191,11 @@ public class BotGUI extends JFrame {
             GlobalSettings.LOGOUT_WHEN_FULL = source.isSelected();
         });
 
+        useAntibanCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            tabbedPaneMenu.setEnabledAt(4, source.isSelected());
+        });
+
         buryBonesCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.BURY_BONES = source.isSelected();
@@ -189,6 +204,7 @@ public class BotGUI extends JFrame {
         usePotionCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.USE_POTION = source.isSelected();
+            tabbedPaneMenu.setEnabledAt(3, source.isSelected());
         });
 
         combatCheckBox.addChangeListener(event -> {
@@ -229,6 +245,11 @@ public class BotGUI extends JFrame {
         superAttackCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.SUPER_ATTACK_POTION = source.isSelected();
+        });
+
+        applyNowButton.addActionListener(event -> {
+            context.getAntibanManager().getFeature("RANDOM_CAMERA_ROTATION").setProbability(Float.parseFloat(cameraTextField.getText()));
+            context.getAntibanManager().getFeature("RANDOM_MOUSE_MOVEMENT").setProbability(Float.parseFloat(mouseTextField.getText()));
         });
     }
 

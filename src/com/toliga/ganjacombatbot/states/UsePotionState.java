@@ -1,5 +1,6 @@
 package com.toliga.ganjacombatbot.states;
 
+import com.toliga.ganjabots.core.AntibanManager;
 import com.toliga.ganjabots.core.State;
 import com.toliga.ganjacombatbot.GlobalSettings;
 import org.dreambot.api.methods.skills.Skill;
@@ -7,7 +8,7 @@ import org.dreambot.api.script.AbstractScript;
 
 public class UsePotionState implements State {
     @Override
-    public boolean execute(AbstractScript context) {
+    public boolean execute(AbstractScript context, AntibanManager antibanManager) {
         AbstractScript.log("USE_POTION");
 
         if (GlobalSettings.STRENGTH_POTION && context.getSkills().getBoostedLevels(Skill.STRENGTH) == context.getSkills().getRealLevel(Skill.STRENGTH)) {

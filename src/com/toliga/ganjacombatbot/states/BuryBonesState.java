@@ -1,5 +1,6 @@
 package com.toliga.ganjacombatbot.states;
 
+import com.toliga.ganjabots.core.AntibanManager;
 import com.toliga.ganjabots.core.State;
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.script.AbstractScript;
@@ -9,7 +10,7 @@ public class BuryBonesState implements State {
     private int boneCount;
 
     @Override
-    public boolean execute(AbstractScript context) {
+    public boolean execute(AbstractScript context, AntibanManager antibanManager) {
         AbstractScript.log("BURY_BONES");
         boneCount = context.getInventory().count("Bones");
 

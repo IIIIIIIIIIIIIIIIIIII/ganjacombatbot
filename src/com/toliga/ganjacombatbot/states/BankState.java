@@ -1,5 +1,6 @@
 package com.toliga.ganjacombatbot.states;
 
+import com.toliga.ganjabots.core.AntibanManager;
 import com.toliga.ganjabots.core.State;
 import com.toliga.ganjabots.core.Utilities;
 import com.toliga.ganjacombatbot.GlobalSettings;
@@ -16,7 +17,7 @@ public class BankState implements State {
     private boolean finishedItem = false;
 
     @Override
-    public boolean execute(AbstractScript context) {
+    public boolean execute(AbstractScript context, AntibanManager antibanManager) {
         AbstractScript.log("BANK");
         Utilities.OpenTab(context, Tab.INVENTORY);
 

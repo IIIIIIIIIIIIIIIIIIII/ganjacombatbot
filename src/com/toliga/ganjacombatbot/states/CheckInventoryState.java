@@ -1,5 +1,6 @@
 package com.toliga.ganjacombatbot.states;
 
+import com.toliga.ganjabots.core.AntibanManager;
 import com.toliga.ganjabots.core.State;
 import com.toliga.ganjacombatbot.GlobalSettings;
 import org.dreambot.api.script.AbstractScript;
@@ -9,7 +10,7 @@ public class CheckInventoryState implements State {
     private State nextState;
 
     @Override
-    public boolean execute(AbstractScript context) {
+    public boolean execute(AbstractScript context, AntibanManager antibanManager) {
         AbstractScript.log("CHECK_INVENTORY");
 
         if (context.getInventory().isFull()) {

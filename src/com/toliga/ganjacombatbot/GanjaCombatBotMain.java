@@ -1,6 +1,10 @@
 package com.toliga.ganjacombatbot;
 
+import com.toliga.ganjabots.core.AntibanFeature;
+import com.toliga.ganjabots.core.AntibanManager;
 import com.toliga.ganjabots.core.StateScheduler;
+import com.toliga.ganjacombatbot.antibanfeatures.RandomCameraRotation;
+import com.toliga.ganjacombatbot.antibanfeatures.RandomMouseMovement;
 import com.toliga.ganjacombatbot.states.StartState;
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.script.AbstractScript;
@@ -12,12 +16,13 @@ import java.awt.*;
 
 @ScriptManifest(author = "GanjaSmuggler", category = Category.COMBAT, name = "Ganja Combat Bot", description = "", version = 1.0)
 public class GanjaCombatBotMain extends AbstractScript {
-    public static final String VERSION = "0.4.1";
+    public static final String VERSION = "0.5.0";
 
     private StateScheduler stateScheduler;
     private BotGUI botGUI;
     private boolean isStarted = false;
     private Timer timer;
+    private AntibanManager antibanManager;
 
     @Override
     public void onStart() {
@@ -29,12 +34,16 @@ public class GanjaCombatBotMain extends AbstractScript {
         }
         botGUI = new BotGUI(this, "Ganja Combat Bot");
         stateScheduler = new StateScheduler(this, new StartState());
+        antibanManager = new CombatAntibanManager(this);
+
+        antibanManager.addFeature("RANDOM_CAMERA_ROTATION");
+        antibanManager.addFeature("RANDOM_MOUSE_MOVEMENT");
     }
 
     @Override
     public int onLoop() {
         if (isStarted) {
-            stateScheduler.executeState();
+            stateScheduler.executeState(antibanManager);
         }
         return Calculations.random(50, 100);
     }
@@ -63,4 +72,8 @@ public class GanjaCombatBotMain extends AbstractScript {
     }
 
     public Timer getTimer() { return timer; }
+
+    public AntibanManager getAntibanManager() {
+        return antibanManager;
+    }
 }

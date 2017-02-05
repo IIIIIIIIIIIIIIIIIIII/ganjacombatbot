@@ -1,5 +1,6 @@
 package com.toliga.ganjacombatbot.states;
 
+import com.toliga.ganjabots.core.AntibanManager;
 import com.toliga.ganjabots.core.State;
 import com.toliga.ganjacombatbot.GlobalSettings;
 import org.dreambot.api.methods.Calculations;
@@ -17,7 +18,7 @@ public class TakeLootState implements State {
     private int previousLootCount;
 
     @Override
-    public boolean execute(AbstractScript context) {
+    public boolean execute(AbstractScript context, AntibanManager antibanManager) {
         AbstractScript.log("TAKE_LOOT");
         do {
             currentIndex = Calculations.random(GlobalSettings.LOOT_NAMES.length);

@@ -1,5 +1,6 @@
 package com.toliga.ganjacombatbot.states;
 
+import com.toliga.ganjabots.core.AntibanManager;
 import com.toliga.ganjabots.core.State;
 import com.toliga.ganjacombatbot.GlobalSettings;
 import org.dreambot.api.methods.Calculations;
@@ -13,13 +14,13 @@ public class KillMobState implements State {
     private NPC npc = null;
 
     /**
-     * Choose a mob that is closest.
+     * Choose a mob that is closest and attack it.
      *
      * @param context Running environment.
      * @return Continue to next state or not.
      */
     @Override
-    public boolean execute(AbstractScript context) {
+    public boolean execute(AbstractScript context, AntibanManager antibanManager) {
         AbstractScript.log("KILL_MOB");
 
         if (!interacting) {
@@ -50,6 +51,8 @@ public class KillMobState implements State {
                 context.getWalking().toggleRun();
         }
 
+        antibanManager.runFeatures();
+
         if (npc != null) {
             if (!interacting) {
                 if (npc.interact("Attack")) {
@@ -63,7 +66,6 @@ public class KillMobState implements State {
                 //    interacting = false;
                 //    AbstractScript.log("Standing still.");
                 //}
-                AbstractScript.log("Interacting...");
 
                 if (!context.getMap().canReach(npc)) {
                     interacting = false;
@@ -81,7 +83,7 @@ public class KillMobState implements State {
             int previousHealth = context.getLocalPlayer().getHealthPercent();
             context.getInventory().interact(GlobalSettings.FOOD_NAMES[Calculations.random(GlobalSettings.FOOD_NAMES.length)], "Eat");
             AbstractScript.sleepUntil(() -> context.getLocalPlayer().getHealthPercent() > previousHealth, 2000);
-            interacting = false;
+            npc.interact("Attack");
         }
 
         return false;
