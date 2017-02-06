@@ -1,10 +1,7 @@
 package com.toliga.ganjacombatbot;
 
-import com.toliga.ganjabots.core.AntibanFeature;
 import com.toliga.ganjabots.core.AntibanManager;
 import com.toliga.ganjabots.core.StateScheduler;
-import com.toliga.ganjacombatbot.antibanfeatures.RandomCameraRotation;
-import com.toliga.ganjacombatbot.antibanfeatures.RandomMouseMovement;
 import com.toliga.ganjacombatbot.states.StartState;
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.script.AbstractScript;
@@ -38,6 +35,7 @@ public class GanjaCombatBotMain extends AbstractScript {
 
         antibanManager.addFeature("RANDOM_CAMERA_ROTATION");
         antibanManager.addFeature("RANDOM_MOUSE_MOVEMENT");
+        antibanManager.addFeature("RANDOM_TAB_CHECKING");
     }
 
     @Override
@@ -75,5 +73,9 @@ public class GanjaCombatBotMain extends AbstractScript {
 
     public AntibanManager getAntibanManager() {
         return antibanManager;
+    }
+
+    public BotGUI getBotGUI() {
+        return botGUI;
     }
 }

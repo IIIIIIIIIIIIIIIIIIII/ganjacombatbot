@@ -26,6 +26,7 @@ public class GlobalSettings {
     public static boolean SUPER_STRENGTH_POTION = false;
     public static boolean SUPER_DEFENCE_POTION = false;
     public static boolean SUPER_ATTACK_POTION = false;
+    public static boolean USE_ANTIBAN = false;
 
     public static Tile SOURCE_TILE = null;
 }

@@ -41,13 +41,11 @@ public class BotGUI extends JFrame {
     private JPanel potionPanel;
     private JCheckBox superCombatCheckBox;
     private JCheckBox useAntibanCheckBox;
-    private JSlider slider1;
-    private JSlider slider2;
-    private JSlider slider3;
+    private JSlider mouseSlider;
+    private JSlider cameraSlider;
+    private JSlider tabSlider;
     private JCheckBox interactionResponseCheckBox;
     private JTextField textField1;
-    private JTextField mouseTextField;
-    private JTextField cameraTextField;
     private JButton applyNowButton;
     private GanjaCombatBotMain context;
     private Image backgroundImage;
@@ -194,6 +192,12 @@ public class BotGUI extends JFrame {
         useAntibanCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             tabbedPaneMenu.setEnabledAt(4, source.isSelected());
+            GlobalSettings.USE_ANTIBAN = source.isSelected();
+            if (source.isSelected()) {
+                context.getAntibanManager().activateAllFeatures();
+            } else {
+                context.getAntibanManager().disableAllFeatures();
+            }
         });
 
         buryBonesCheckBox.addChangeListener(event -> {
@@ -247,9 +251,16 @@ public class BotGUI extends JFrame {
             GlobalSettings.SUPER_ATTACK_POTION = source.isSelected();
         });
 
-        applyNowButton.addActionListener(event -> {
-            context.getAntibanManager().getFeature("RANDOM_CAMERA_ROTATION").setProbability(Float.parseFloat(cameraTextField.getText()));
-            context.getAntibanManager().getFeature("RANDOM_MOUSE_MOVEMENT").setProbability(Float.parseFloat(mouseTextField.getText()));
+        mouseSlider.addChangeListener(event -> {
+            context.getAntibanManager().getFeature("RANDOM_MOUSE_MOVEMENT").setProbability((float)(mouseSlider.getValue() / 1000.0));
+        });
+
+        cameraSlider.addChangeListener(event -> {
+            context.getAntibanManager().getFeature("RANDOM_CAMERA_ROTATION").setProbability((float)(cameraSlider.getValue() / 1000.0));
+        });
+
+        tabSlider.addChangeListener(event -> {
+            context.getAntibanManager().getFeature("RANDOM_TAB_CHECKING").setProbability((float)(tabSlider.getValue() / 1000.0));
         });
     }
 
