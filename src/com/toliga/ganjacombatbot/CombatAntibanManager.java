@@ -2,10 +2,7 @@ package com.toliga.ganjacombatbot;
 
 import com.toliga.ganjabots.core.AntibanFeature;
 import com.toliga.ganjabots.core.AntibanManager;
-import com.toliga.ganjacombatbot.antibanfeatures.RandomCameraRotation;
-import com.toliga.ganjacombatbot.antibanfeatures.RandomMouseMovement;
-import com.toliga.ganjacombatbot.antibanfeatures.RandomTabChecking;
-import com.toliga.ganjacombatbot.antibanfeatures.RandomWorldHop;
+import com.toliga.ganjacombatbot.antibanfeatures.*;
 import org.dreambot.api.script.AbstractScript;
 
 public class CombatAntibanManager extends AntibanManager {
@@ -26,6 +23,8 @@ public class CombatAntibanManager extends AntibanManager {
             antibanFeature = new RandomWorldHop(0.5f);
         } else if (name.equalsIgnoreCase("random_tab_checking")) {
             antibanFeature = new RandomTabChecking(0.1f);
+        } else if (name.equalsIgnoreCase("interaction_response")) {
+            antibanFeature = new InteractionResponse(1f);
         }
 
         if (antibanFeature != null && GlobalSettings.USE_ANTIBAN) {

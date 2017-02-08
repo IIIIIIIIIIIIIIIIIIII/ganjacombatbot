@@ -9,6 +9,7 @@ import org.dreambot.api.wrappers.interactive.NPC;
 
 public class KillMobState implements State {
 
+    private static int standingStill;
     private State nextState;
     private boolean interacting = false;
     private NPC npc = null;
@@ -62,10 +63,10 @@ public class KillMobState implements State {
             }
 
             if (interacting) {
-                //if (context.getLocalPlayer().isStandingStill()) {
-                //    interacting = false;
-                //    AbstractScript.log("Standing still.");
-                //}
+                if (isStandingStill(context)) {
+                    interacting = false;
+                    AbstractScript.log("Standing still.");
+                }
 
                 if (!context.getMap().canReach(npc)) {
                     interacting = false;
@@ -92,5 +93,16 @@ public class KillMobState implements State {
     @Override
     public State next() {
         return nextState;
+    }
+
+    private boolean isStandingStill(AbstractScript context) {
+
+        if (!context.getLocalPlayer().isAnimating()) {
+            standingStill++;
+        } else {
+            standingStill = 0;
+        }
+
+        return standingStill > 1000;
     }
 }
