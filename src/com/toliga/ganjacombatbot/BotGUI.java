@@ -1,6 +1,8 @@
 package com.toliga.ganjacombatbot;
 
 import com.toliga.ganjabots.core.Utilities;
+import com.toliga.ganjabots.core.Validator;
+import com.toliga.ganjacombatbot.rules.SeperableTextValidator;
 import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.script.AbstractScript;
 
@@ -51,10 +53,13 @@ public class BotGUI extends JFrame {
     private Image backgroundImage;
     private Image ganjaIcon;
     private SaveManager saveManager;
+    private Validator validator;
 
     public BotGUI(AbstractScript context, String title) {
         this.context = (GanjaCombatBotMain) context;
         saveManager = new SaveManager();
+        validator = new Validator();
+        validator.addValidation(new SeperableTextValidator());
         setTitle(title);
         setContentPane(rootPane);
         pack();
@@ -100,7 +105,7 @@ public class BotGUI extends JFrame {
     private void registerEvents() {
         btnStart.addActionListener(event -> {
             /********************MOB NAMES*******************/
-            String mobs[] = mobNameTextField.getText().split(",");
+            String mobs[] = validator.validate(mobNameTextField.getText()).split(",");
 
             for (int i = 0; i < mobs.length; i++) {
                 mobs[i] = mobs[i].trim();
@@ -110,7 +115,7 @@ public class BotGUI extends JFrame {
 
             /******************LOOT NAMES*******************/
             if (GlobalSettings.LOOT) {
-                String loots[] = lootTextField.getText().split(",");
+                String loots[] = validator.validate(lootTextField.getText()).split(",");
 
                 for (int i = 0; i < loots.length; i++) {
                     loots[i] = loots[i].trim();
@@ -121,19 +126,15 @@ public class BotGUI extends JFrame {
 
             /*******************FOOD NAMES*******************/
             if (GlobalSettings.EAT_FOOD) {
-                if (!foodTextField.getText().isEmpty()) {
-                    String foods[] = foodTextField.getText().split(",");
+                String foods[] = validator.validate(foodTextField.getText()).split(",");
 
-                    for (int i = 0; i < foods.length; i++) {
-                        foods[i] = foods[i].trim();
-                    }
-
-                    GlobalSettings.FOOD_NAMES = foods;
-                    GlobalSettings.FOOD_AMOUNT = foodAmountTextField.getText().isEmpty() ? 0 : Integer.parseInt(foodAmountTextField.getText());
-                    GlobalSettings.HEALTH_PERCENT = healthSlider.getValue();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please specify the food names.", "Ganja Combat Bot - Food", JOptionPane.WARNING_MESSAGE);
+                for (int i = 0; i < foods.length; i++) {
+                    foods[i] = foods[i].trim();
                 }
+
+                GlobalSettings.FOOD_NAMES = foods;
+                GlobalSettings.FOOD_AMOUNT = foodAmountTextField.getText().isEmpty() ? 0 : Integer.parseInt(foodAmountTextField.getText());
+                GlobalSettings.HEALTH_PERCENT = healthSlider.getValue();
             }
 
             context.setStarted(true);
@@ -261,6 +262,11 @@ public class BotGUI extends JFrame {
 
         tabSlider.addChangeListener(event -> {
             context.getAntibanManager().getFeature("RANDOM_TAB_CHECKING").setProbability((float)(tabSlider.getValue() / 1000.0));
+        });
+
+        interactionResponseCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            context.getAntibanManager().getFeature("INTERACTION_RESPONSE").setEnabled(source.isSelected());
         });
     }
 

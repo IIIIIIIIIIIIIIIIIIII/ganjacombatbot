@@ -58,6 +58,7 @@ public class KillMobState implements State {
             if (!interacting) {
                 if (npc.interact("Attack")) {
                     AbstractScript.log("Attacking...");
+                    standingStill = 0;
                     interacting = true;
                 }
             }
@@ -103,6 +104,6 @@ public class KillMobState implements State {
             standingStill = 0;
         }
 
-        return standingStill > 1000;
+        return standingStill > 35;
     }
 }
