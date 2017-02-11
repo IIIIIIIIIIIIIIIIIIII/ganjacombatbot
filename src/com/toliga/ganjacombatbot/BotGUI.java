@@ -2,8 +2,9 @@ package com.toliga.ganjacombatbot;
 
 import com.toliga.ganjabots.core.Utilities;
 import com.toliga.ganjabots.core.Validator;
+import com.toliga.ganjabots.graphics.InGameGUIBuilder;
+import com.toliga.ganjacombatbot.drawables.*;
 import com.toliga.ganjacombatbot.rules.SeperableTextValidator;
-import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.script.AbstractScript;
 
 import javax.swing.*;
@@ -49,21 +50,25 @@ public class BotGUI extends JFrame {
     private JCheckBox interactionResponseCheckBox;
     private JTextField textField1;
     private JButton btnToggleInGameGUI;
-    private JButton applyNowButton;
+    private JButton btnOpenAttack;
+    private JButton btnOpenStrength;
+    private JButton btnOpenDefence;
+    private JButton btnOpenHitpoint;
+    private JButton btnOpenRange;
+    private JButton btnOpenMagic;
     private GanjaCombatBotMain context;
-    private Image backgroundImage;
-    private Image ganjaIcon;
     private ImageIcon inGameGUIOpened;
     private ImageIcon inGameGUIClosed;
     private SaveManager saveManager;
     private Validator validator;
     private boolean inGameGUIOpenState = false;
-    private boolean canDraw = true;
+    private InGameGUIBuilder inGameGUI;
 
     public BotGUI(AbstractScript context, String title) {
         this.context = (GanjaCombatBotMain) context;
         saveManager = new SaveManager();
         validator = new Validator();
+        inGameGUI = new InGameGUIBuilder(context, GanjaCombatBotMain.VERSION, new MainDrawable(context));
         validator.addValidation(new SeperableTextValidator());
         setTitle(title);
         setContentPane(rootPane);
@@ -77,14 +82,18 @@ public class BotGUI extends JFrame {
     }
 
     private void initializeComponents() {
-        backgroundImage = Utilities.LoadImage("http://i63.tinypic.com/2j48v94.png", 230, 111);
-        ganjaIcon = Utilities.LoadImage("http://ai-i1.infcdn.net/icons_siandroid/png/200/1138/1138962.png", 20, 20);
         btnStart.setIcon(new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/buttons/512/Icon_3-128.png", 35, 35)));
         btnStop.setIcon(new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/buttons/512/Icon_5-128.png", 35, 35)));
         infoLabel.setIcon(new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/buttons/512/Icon_17-128.png", 20, 20)));
         inGameGUIClosed = new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/wpzoom-developer-icon-set/500/102-128.png", 15, 15));
         inGameGUIOpened = new ImageIcon(Utilities.LoadImage("http://cdn3.iconfinder.com/data/icons/wpzoom-developer-icon-set/500/103-128.png", 15, 15));
-        btnToggleInGameGUI.setIcon(inGameGUIClosed);
+        btnOpenAttack.setIcon(new ImageIcon(Utilities.LoadImage("http://www.account4rs.com/images/skill_powerleveling/attack.png", 15, 15)));
+        btnOpenStrength.setIcon(new ImageIcon(Utilities.LoadImage("http://www.account4rs.com/images/skill_powerleveling/strength.png", 15, 15)));
+        btnOpenDefence.setIcon(new ImageIcon(Utilities.LoadImage("http://www.account4rs.com/images/skill_powerleveling/defence.png", 15, 15)));
+        btnOpenHitpoint.setIcon(new ImageIcon(Utilities.LoadImage("http://runetrack.com/images/skill_icons/constitution.gif", 15, 15)));
+        btnOpenRange.setIcon(new ImageIcon(Utilities.LoadImage("http://www.account4rs.com/images/skill_powerleveling/ranged.png", 15, 15)));
+        btnOpenMagic.setIcon(new ImageIcon(Utilities.LoadImage("http://www.account4rs.com/images/skill_powerleveling/magic.png", 15, 15)));
+        btnToggleInGameGUI.setIcon(inGameGUIOpened);
 
         btnStop.setEnabled(false);
         tabbedPaneMenu.setEnabledAt(1, false);
@@ -149,6 +158,7 @@ public class BotGUI extends JFrame {
             context.setStarted(true);
             btnStart.setEnabled(false);
             btnStop.setEnabled(true);
+            inGameGUI.setCanDraw(true);
             if (System.getProperty("os.name").toLowerCase().contains("win")) {
                 saveManager.save();
             }
@@ -158,6 +168,55 @@ public class BotGUI extends JFrame {
             context.setStarted(false);
             btnStop.setEnabled(false);
             btnStart.setEnabled(true);
+            inGameGUI.setCanDraw(false);
+        });
+
+        btnOpenAttack.addActionListener(event -> {
+            if (!(inGameGUI.getDrawable() instanceof AttackDrawable)) {
+                inGameGUI.setDrawable(new AttackDrawable(context));
+            } else {
+                inGameGUI.setDrawable(new MainDrawable(context));
+            }
+        });
+
+        btnOpenStrength.addActionListener(event -> {
+            if (!(inGameGUI.getDrawable() instanceof StrengthDrawable)) {
+                inGameGUI.setDrawable(new StrengthDrawable(context));
+            } else {
+                inGameGUI.setDrawable(new MainDrawable(context));
+            }
+        });
+
+        btnOpenDefence.addActionListener(event -> {
+            if (!(inGameGUI.getDrawable() instanceof DefenceDrawable)) {
+                inGameGUI.setDrawable(new DefenceDrawable(context));
+            } else {
+                inGameGUI.setDrawable(new MainDrawable(context));
+            }
+        });
+
+        btnOpenHitpoint.addActionListener(event -> {
+            if (!(inGameGUI.getDrawable() instanceof HitpointDrawable)) {
+                inGameGUI.setDrawable(new HitpointDrawable(context));
+            } else {
+                inGameGUI.setDrawable(new MainDrawable(context));
+            }
+        });
+
+        btnOpenRange.addActionListener(event -> {
+            if (!(inGameGUI.getDrawable() instanceof RangeDrawable)) {
+                inGameGUI.setDrawable(new RangeDrawable(context));
+            } else {
+                inGameGUI.setDrawable(new MainDrawable(context));
+            }
+        });
+
+        btnOpenMagic.addActionListener(event -> {
+            if (!(inGameGUI.getDrawable() instanceof MagicDrawable)) {
+                inGameGUI.setDrawable(new MagicDrawable(context));
+            } else {
+                inGameGUI.setDrawable(new MainDrawable(context));
+            }
         });
 
         btnToggleInGameGUI.addActionListener(event -> {
@@ -168,7 +227,7 @@ public class BotGUI extends JFrame {
             }
 
             inGameGUIOpenState = !inGameGUIOpenState;
-            canDraw = !canDraw;
+            inGameGUI.setCanDraw(!inGameGUI.getCanDraw());
         });
 
         healthSlider.addChangeListener(event -> {
@@ -291,50 +350,6 @@ public class BotGUI extends JFrame {
     }
 
     public void DrawInGameGUI(Graphics2D graphics) {
-        if (canDraw) {
-            int xhAtk = context.getSkillTracker().getGainedExperiencePerHour(Skill.ATTACK),
-                    xhStr = context.getSkillTracker().getGainedExperiencePerHour(Skill.STRENGTH),
-                    xhDef = context.getSkillTracker().getGainedExperiencePerHour(Skill.DEFENCE),
-                    xhHit = context.getSkillTracker().getGainedExperiencePerHour(Skill.HITPOINTS),
-                    xhRan = context.getSkillTracker().getGainedExperiencePerHour(Skill.RANGED),
-                    xhMag = context.getSkillTracker().getGainedExperiencePerHour(Skill.MAGIC);
-
-            long xgAtk = context.getSkillTracker().getGainedExperience(Skill.ATTACK),
-                    xgStr = context.getSkillTracker().getGainedExperience(Skill.STRENGTH),
-                    xgDef = context.getSkillTracker().getGainedExperience(Skill.DEFENCE),
-                    xgHit = context.getSkillTracker().getGainedExperience(Skill.HITPOINTS),
-                    xgRan = context.getSkillTracker().getGainedExperience(Skill.RANGED),
-                    xgMag = context.getSkillTracker().getGainedExperience(Skill.MAGIC);
-
-            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            graphics.drawImage(backgroundImage, 264, 347, null);
-
-            graphics.setFont(new Font("Magneto", Font.BOLD, 15));
-            graphics.setColor(new Color(0x00, 0x66, 0x00));
-            graphics.drawString("Ganja Combat Bot", 264, 365);
-
-            graphics.setFont(new Font("Consolas", Font.PLAIN, 15));
-            graphics.setColor(Color.BLACK);
-
-            graphics.drawString("v" + GanjaCombatBotMain.VERSION, 420, 365);
-            graphics.drawImage(ganjaIcon, 470, 347, null);
-
-            graphics.drawString("        Run Time:", 280, 382);
-            graphics.drawString("           XP/hr:", 280, 399);
-            graphics.drawString("       XP gained:", 280, 416);
-            //graphics.drawString(String.format("Atk: %s  Str: %s  Def: %s",
-            //        context.getSkills().getRealLevel(Skill.ATTACK), context.getSkills().getRealLevel(Skill.STRENGTH), context.getSkills().getRealLevel(Skill.DEFENCE)),
-            //        280, 433);
-            if (GlobalSettings.BURY_BONES) {
-                graphics.drawString("Prayer XP gained:", 280, 433);
-            }
-
-            graphics.drawString(context.getTimer().formatTime(), 420, 382); // Runtime
-            graphics.drawString((xhAtk + xhStr + xhDef + xhHit + xhRan + xhMag) + " XP", 420, 399); // XP / hr
-            graphics.drawString((xgAtk + xgStr + xgDef + xgHit + xgRan + xgMag) + " XP", 420, 416); // XP gained
-            if (GlobalSettings.BURY_BONES) {
-                graphics.drawString(context.getSkillTracker().getGainedExperience(Skill.PRAYER) + " XP", 420, 433); // Prayer XP gained
-            }
-        }
+        inGameGUI.draw(graphics);
     }
 }
