@@ -56,6 +56,10 @@ public class BotGUI extends JFrame {
     private JButton btnOpenHitpoint;
     private JButton btnOpenRange;
     private JButton btnOpenMagic;
+    private JTextField pathProfileTextField;
+    private JButton btnCreateProfile;
+    private JList profileList;
+    private JButton btnLoadProfile;
     private GanjaCombatBotMain context;
     private ImageIcon inGameGUIOpened;
     private ImageIcon inGameGUIClosed;
