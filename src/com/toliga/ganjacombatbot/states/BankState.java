@@ -18,7 +18,7 @@ public class BankState implements State {
 
     @Override
     public boolean execute(AbstractScript context, AntibanManager antibanManager) {
-        AbstractScript.log("BANK");
+        if (GlobalSettings.DEBUG) AbstractScript.log("BANK");
         Utilities.OpenTab(context, Tab.INVENTORY);
 
         if (!getFood) {

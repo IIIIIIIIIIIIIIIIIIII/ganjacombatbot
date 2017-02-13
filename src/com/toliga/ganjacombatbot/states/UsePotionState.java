@@ -9,7 +9,7 @@ import org.dreambot.api.script.AbstractScript;
 public class UsePotionState implements State {
     @Override
     public boolean execute(AbstractScript context, AntibanManager antibanManager) {
-        AbstractScript.log("USE_POTION");
+        if (GlobalSettings.DEBUG) AbstractScript.log("USE_POTION");
 
         if (GlobalSettings.STRENGTH_POTION && context.getSkills().getBoostedLevels(Skill.STRENGTH) == context.getSkills().getRealLevel(Skill.STRENGTH)) {
             AbstractScript.log("Try to drink strength potion.");

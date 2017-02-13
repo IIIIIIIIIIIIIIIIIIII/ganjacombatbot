@@ -12,7 +12,7 @@ public class WalkToBankState implements State {
 
     @Override
     public boolean execute(AbstractScript context, AntibanManager antibanManager) {
-        AbstractScript.log("WALK_TO_BANK");
+        if (GlobalSettings.DEBUG) AbstractScript.log("WALK_TO_BANK");
 
         Area destinationArea = context.getBank().getClosestBankLocation().getArea(1);
 

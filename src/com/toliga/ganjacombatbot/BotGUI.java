@@ -1,14 +1,19 @@
 package com.toliga.ganjacombatbot;
 
+import com.toliga.ganjabots.core.SaveManager;
 import com.toliga.ganjabots.core.Utilities;
 import com.toliga.ganjabots.core.Validator;
 import com.toliga.ganjabots.graphics.InGameGUIBuilder;
+import com.toliga.ganjabots.path.PathProfile;
 import com.toliga.ganjacombatbot.drawables.*;
 import com.toliga.ganjacombatbot.rules.SeperableTextValidator;
 import org.dreambot.api.script.AbstractScript;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 public class BotGUI extends JFrame {
     private JButton btnStart;
@@ -67,9 +72,13 @@ public class BotGUI extends JFrame {
     private Validator validator;
     private boolean inGameGUIOpenState = false;
     private InGameGUIBuilder inGameGUI;
+    private DefaultListModel<String> listModel;
+    private List<PathProfile> profiles = new ArrayList<>();
 
     public BotGUI(AbstractScript context, String title) {
         this.context = (GanjaCombatBotMain) context;
+        listModel = new DefaultListModel<>();
+        profileList.setModel(listModel);
         saveManager = new SaveManager();
         validator = new Validator();
         inGameGUI = new InGameGUIBuilder(context, GanjaCombatBotMain.VERSION, new MainDrawable(context));
@@ -105,6 +114,25 @@ public class BotGUI extends JFrame {
         tabbedPaneMenu.setEnabledAt(3, false);
         tabbedPaneMenu.setEnabledAt(4, false);
 
+        // Load from file
+        AbstractScript.log("Starting loading...");
+        HashMap<String, String> savedOptions = saveManager.loadAll();
+
+        if (!savedOptions.isEmpty()) {
+            GlobalSettings.MOB_NAMES = savedOptions.get("mobnames").split(",");
+            GlobalSettings.LOOT_NAMES = savedOptions.containsKey("lootnames") ? savedOptions.get("lootnames").split(",") : null;
+            GlobalSettings.FOOD_NAMES = savedOptions.containsKey("foodnames") ? savedOptions.get("foodnames").split(",") : null;
+            healthSlider.setValue(GlobalSettings.HEALTH_PERCENT = Integer.valueOf(savedOptions.get("healthpercent")));
+            powerkillCheckBox.setSelected(GlobalSettings.POWERKILL = Boolean.valueOf(savedOptions.get("powerkill")));
+            lootCheckBox.setSelected(GlobalSettings.LOOT = Boolean.valueOf(savedOptions.get("loot")));
+            eatFoodCheckBox.setSelected(GlobalSettings.EAT_FOOD = Boolean.valueOf(savedOptions.get("eatfood")));
+            bankWhenFullCheckBox.setSelected(GlobalSettings.BANK_WHEN_FULL = Boolean.valueOf(savedOptions.get("bankwhenfull")));
+            logoutWhenFullCheckBox.setSelected(GlobalSettings.LOGOUT_WHEN_FULL = Boolean.valueOf(savedOptions.get("logoutwhenfull")));
+            useAntibanCheckBox.setSelected(GlobalSettings.USE_ANTIBAN = Boolean.valueOf("useantiban"));
+            buryBonesCheckBox.setSelected(GlobalSettings.BURY_BONES = Boolean.valueOf("burybones"));
+            usePotionCheckBox.setSelected(GlobalSettings.USE_POTION = Boolean.valueOf("usepotion"));
+        }
+
         if (GlobalSettings.MOB_NAMES != null) {
             for (String mob : GlobalSettings.MOB_NAMES) {
                 mobNameTextField.setText(mobNameTextField.getText() + mob + ",");
@@ -126,8 +154,17 @@ public class BotGUI extends JFrame {
 
     private void registerEvents() {
         btnStart.addActionListener(event -> {
+            if (mobNameTextField.getText().equalsIgnoreCase("/debug")) {
+                GlobalSettings.DEBUG = true;
+                return;
+            }
+
+            HashMap<String, String> pairs = new HashMap<>();
+            String mobNames = null, lootNames = null, foodNames = null;
+
             /********************MOB NAMES*******************/
-            String mobs[] = validator.validate(mobNameTextField.getText()).split(",");
+            mobNames = validator.validate(mobNameTextField.getText());
+            String mobs[] = mobNames.split(",");
 
             for (int i = 0; i < mobs.length; i++) {
                 mobs[i] = mobs[i].trim();
@@ -137,7 +174,8 @@ public class BotGUI extends JFrame {
 
             /******************LOOT NAMES*******************/
             if (GlobalSettings.LOOT) {
-                String loots[] = validator.validate(lootTextField.getText()).split(",");
+                lootNames = validator.validate(lootTextField.getText());
+                String loots[] = lootNames.split(",");
 
                 for (int i = 0; i < loots.length; i++) {
                     loots[i] = loots[i].trim();
@@ -148,7 +186,8 @@ public class BotGUI extends JFrame {
 
             /*******************FOOD NAMES*******************/
             if (GlobalSettings.EAT_FOOD) {
-                String foods[] = validator.validate(foodTextField.getText()).split(",");
+                foodNames = validator.validate(foodTextField.getText());
+                String foods[] = foodNames.split(",");
 
                 for (int i = 0; i < foods.length; i++) {
                     foods[i] = foods[i].trim();
@@ -159,13 +198,29 @@ public class BotGUI extends JFrame {
                 GlobalSettings.HEALTH_PERCENT = healthSlider.getValue();
             }
 
+            pairs.put("mobnames", mobNames);
+            pairs.put("lootnames", lootNames == null ? "" : lootNames);
+            pairs.put("foodnames", foodNames == null ? "" : foodNames);
+            pairs.put("healthpercent", String.valueOf(GlobalSettings.HEALTH_PERCENT));
+            pairs.put("powerkill", String.valueOf(GlobalSettings.POWERKILL));
+            pairs.put("loot", String.valueOf(GlobalSettings.LOOT));
+            pairs.put("eatfood", String.valueOf(GlobalSettings.EAT_FOOD));
+            pairs.put("bankwhenfull", String.valueOf(GlobalSettings.BANK_WHEN_FULL));
+            pairs.put("logoutwhenfull", String.valueOf(GlobalSettings.LOGOUT_WHEN_FULL));
+            pairs.put("useantiban", String.valueOf(GlobalSettings.USE_ANTIBAN));
+            pairs.put("burybones", String.valueOf(GlobalSettings.BURY_BONES));
+            pairs.put("usepotion", String.valueOf(GlobalSettings.USE_POTION));
+
+            saveManager.saveOptions(pairs);
+
+            if (GlobalSettings.USE_PATH_CREATOR) {
+                GlobalSettings.CHOSEN_PROFILE = profiles.get(profileList.getSelectedIndex());
+            }
+
             context.setStarted(true);
             btnStart.setEnabled(false);
             btnStop.setEnabled(true);
             inGameGUI.setCanDraw(true);
-            if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                saveManager.save();
-            }
         });
 
         btnStop.addActionListener(event -> {
@@ -244,7 +299,6 @@ public class BotGUI extends JFrame {
             if (source.isSelected()) {
                 lootCheckBox.setSelected(!source.isSelected());
             }
-            // lootCheckBox.setEnabled(!source.isSelected());
         });
 
         lootCheckBox.addChangeListener(event -> {
@@ -253,7 +307,6 @@ public class BotGUI extends JFrame {
             if (source.isSelected()) {
                 powerkillCheckBox.setSelected(!source.isSelected());
             }
-            //powerkillCheckBox.setEnabled(!source.isSelected());
             tabbedPaneMenu.setEnabledAt(1, source.isSelected());
         });
 
@@ -350,6 +403,16 @@ public class BotGUI extends JFrame {
         interactionResponseCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             context.getAntibanManager().getFeature("INTERACTION_RESPONSE").setEnabled(source.isSelected());
+        });
+
+        btnCreateProfile.addActionListener(event -> {
+            PathProfile profile = new PathProfile(pathProfileTextField.getText());
+
+            PathFinderGUI pathFinderGUI = new PathFinderGUI(context, profile);
+            pathFinderGUI.setVisible(true);
+
+            profiles.add(profile);
+            listModel.addElement(profile.toString());
         });
     }
 

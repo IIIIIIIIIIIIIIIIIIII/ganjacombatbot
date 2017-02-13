@@ -1,5 +1,6 @@
 package com.toliga.ganjacombatbot;
 
+import com.toliga.ganjabots.path.PathProfile;
 import org.dreambot.api.methods.map.Tile;
 
 public class GlobalSettings {
@@ -27,6 +28,10 @@ public class GlobalSettings {
     public static boolean SUPER_DEFENCE_POTION = false;
     public static boolean SUPER_ATTACK_POTION = false;
     public static boolean USE_ANTIBAN = false;
+    public static boolean USE_PATH_CREATOR = false; // real value false
+    public static boolean DEBUG = true; // default value will be false
+
+    public static PathProfile CHOSEN_PROFILE = null;
 
     public static Tile SOURCE_TILE = null;
 }

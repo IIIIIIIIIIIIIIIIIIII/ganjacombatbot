@@ -19,7 +19,7 @@ public class TakeLootState implements State {
 
     @Override
     public boolean execute(AbstractScript context, AntibanManager antibanManager) {
-        AbstractScript.log("TAKE_LOOT");
+        if (GlobalSettings.DEBUG) AbstractScript.log("TAKE_LOOT");
         do {
             currentIndex = Calculations.random(GlobalSettings.LOOT_NAMES.length);
         } while (previousIndexes.contains(currentIndex));

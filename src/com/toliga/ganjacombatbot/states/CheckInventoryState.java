@@ -11,7 +11,7 @@ public class CheckInventoryState implements State {
 
     @Override
     public boolean execute(AbstractScript context, AntibanManager antibanManager) {
-        AbstractScript.log("CHECK_INVENTORY");
+        if (GlobalSettings.DEBUG) AbstractScript.log("CHECK_INVENTORY");
 
         if (context.getInventory().isFull()) {
             if (GlobalSettings.BURY_BONES && context.getInventory().contains("Bones")) {
@@ -23,6 +23,8 @@ public class CheckInventoryState implements State {
                 // TODO: Implement new LogoutState() state.
             } else {
                 GlobalSettings.LOOT = false;
+                GlobalSettings.POWERKILL = true;
+                nextState = new KillMobState();
             }
         } else {
 

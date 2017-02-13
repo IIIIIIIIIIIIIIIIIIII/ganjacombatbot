@@ -16,7 +16,7 @@ import java.awt.*;
 
 @ScriptManifest(author = "GanjaSmuggler", category = Category.COMBAT, name = "Ganja Combat Bot", description = "", version = 1.0)
 public class GanjaCombatBotMain extends AbstractScript implements MessageListener {
-    public static final String VERSION = "0.6.0";
+    public static final String VERSION = "0.7.0";
 
     private StateScheduler stateScheduler;
     private BotGUI botGUI;
@@ -28,10 +28,6 @@ public class GanjaCombatBotMain extends AbstractScript implements MessageListene
     public void onStart() {
         super.onStart();
         timer = new Timer();
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            SaveManager saveManager = new SaveManager();
-            saveManager.load();
-        }
         botGUI = new BotGUI(this, "Ganja Combat Bot");
         stateScheduler = new StateScheduler(this, new StartState());
         antibanManager = new CombatAntibanManager(this);

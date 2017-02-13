@@ -22,7 +22,7 @@ public class KillMobState implements State {
      */
     @Override
     public boolean execute(AbstractScript context, AntibanManager antibanManager) {
-        AbstractScript.log("KILL_MOB");
+        if (GlobalSettings.DEBUG) AbstractScript.log("KILL_MOB");
 
         if (!interacting) {
             if (context.getLocalPlayer().isInteractedWith()) {
