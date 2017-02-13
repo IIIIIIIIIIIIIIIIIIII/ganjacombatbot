@@ -65,6 +65,7 @@ public class BotGUI extends JFrame {
     private JButton btnCreateProfile;
     private JList profileList;
     private JButton btnLoadProfile;
+    private JCheckBox usePathCreatorCheckBox;
     private GanjaCombatBotMain context;
     private ImageIcon inGameGUIOpened;
     private ImageIcon inGameGUIClosed;
@@ -363,6 +364,11 @@ public class BotGUI extends JFrame {
             GlobalSettings.DEFENCE_POTION = source.isSelected();
         });
 
+        usePathCreatorCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.USE_PATH_CREATOR = source.isSelected();
+        });
+
         attackCheckBox.addChangeListener(event -> {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.ATTACK_POTION = source.isSelected();
@@ -406,7 +412,7 @@ public class BotGUI extends JFrame {
         });
 
         btnCreateProfile.addActionListener(event -> {
-            PathProfile profile = new PathProfile(pathProfileTextField.getText());
+            PathProfile profile = new PathProfile(pathProfileTextField.getText(), saveManager);
 
             PathFinderGUI pathFinderGUI = new PathFinderGUI(context, profile);
             pathFinderGUI.setVisible(true);

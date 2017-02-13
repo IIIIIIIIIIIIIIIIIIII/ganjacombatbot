@@ -72,8 +72,10 @@ public class PathFinderGUI extends JFrame {
         btnSaveCurrentTile = new JButton("Add Current Tile");
         panel.add(btnSaveCurrentTile);
 
+        JScrollPane scrollPane = new JScrollPane();
         actionList = new JList(listModel);
-        contentPane.add(actionList, BorderLayout.CENTER);
+        scrollPane.setViewportView(actionList);
+        contentPane.add(scrollPane, BorderLayout.CENTER);
 
         JPanel panel_2 = new JPanel();
         contentPane.add(panel_2, BorderLayout.SOUTH);
@@ -106,6 +108,7 @@ public class PathFinderGUI extends JFrame {
         });
 
         btnSaveProfile.addActionListener(event -> {
+            //pathProfile.saveProfile();
             setVisible(false);
             dispose();
         });

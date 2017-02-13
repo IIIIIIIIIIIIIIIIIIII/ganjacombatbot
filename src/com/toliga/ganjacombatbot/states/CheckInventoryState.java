@@ -18,7 +18,11 @@ public class CheckInventoryState implements State {
                 nextState = new BuryBonesState();
             } else if (GlobalSettings.BANK_WHEN_FULL) {
                 GlobalSettings.SOURCE_TILE = context.getLocalPlayer().getTile();
-                nextState = new WalkToBankState();
+                if (GlobalSettings.USE_PATH_CREATOR) {
+                    nextState = new WalkToBankWithGuidanceState();
+                } else {
+                    nextState = new WalkToBankState();
+                }
             } else if (GlobalSettings.LOGOUT_WHEN_FULL) {
                 // TODO: Implement new LogoutState() state.
             } else {
