@@ -10,7 +10,7 @@ import org.dreambot.api.script.AbstractScript;
 public class BankState implements State {
 
     private int itemIndex = 0;
-    private int foodIntex = 0;
+    private int foodIndex = 0;
     private boolean bankIsOpen = false;
     private boolean getFood = false;
     private boolean finishedFood = false;
@@ -41,13 +41,13 @@ public class BankState implements State {
                 finishedItem = true;
             }
 
-            if (getFood) {
-                if (foodIntex < GlobalSettings.LOOT_NAMES.length) {
-                    String foodName = GlobalSettings.FOOD_NAMES[foodIntex];
+            if (finishedItem && getFood) {
+                if (foodIndex < GlobalSettings.FOOD_NAMES.length) {
+                    String foodName = GlobalSettings.FOOD_NAMES[foodIndex];
                     AbstractScript.log("Food name: " + foodName);
                     context.getBank().withdraw(foodName, GlobalSettings.FOOD_AMOUNT);
                     AbstractScript.sleepUntil(() -> context.getInventory().contains(foodName), 3000);
-                    foodIntex++;
+                    foodIndex++;
                 } else {
                     finishedFood = true;
                 }
@@ -66,6 +66,9 @@ public class BankState implements State {
 
     @Override
     public State next() {
+        if (GlobalSettings.USE_PATH_CREATOR) {
+            return new WalkFromBankWithGuidanceState();
+        }
         return new WalkFromBankState();
     }
 

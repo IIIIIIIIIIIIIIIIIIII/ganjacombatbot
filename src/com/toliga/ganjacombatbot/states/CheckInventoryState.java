@@ -3,11 +3,22 @@ package com.toliga.ganjacombatbot.states;
 import com.toliga.ganjabots.core.AntibanManager;
 import com.toliga.ganjabots.core.State;
 import com.toliga.ganjacombatbot.GlobalSettings;
+import jdk.nashorn.internal.objects.Global;
 import org.dreambot.api.script.AbstractScript;
 
 public class CheckInventoryState implements State {
 
     private State nextState;
+
+    private int countFood(AbstractScript context) {
+        int total = 0;
+
+        for (String food : GlobalSettings.FOOD_NAMES) {
+            total += context.getInventory().count(food);
+        }
+
+        return total;
+    }
 
     @Override
     public boolean execute(AbstractScript context, AntibanManager antibanManager) {
@@ -17,14 +28,20 @@ public class CheckInventoryState implements State {
             if (GlobalSettings.BURY_BONES && context.getInventory().contains("Bones")) {
                 nextState = new BuryBonesState();
             } else if (GlobalSettings.BANK_WHEN_FULL) {
-                GlobalSettings.SOURCE_TILE = context.getLocalPlayer().getTile();
-                if (GlobalSettings.USE_PATH_CREATOR) {
-                    nextState = new WalkToBankWithGuidanceState();
+                if (GlobalSettings.EAT_FOOD && countFood(context) > 0) {
+                    GlobalSettings.EAT_FOOD_TAKE_LOOT = false;
+                    nextState = new KillMobState();
                 } else {
-                    nextState = new WalkToBankState();
+                    GlobalSettings.SOURCE_TILE = context.getLocalPlayer().getTile();
+                    if (GlobalSettings.USE_PATH_CREATOR) {
+                        nextState = new WalkToBankWithGuidanceState();
+                    } else {
+                        nextState = new WalkToBankState();
+                    }
                 }
             } else if (GlobalSettings.LOGOUT_WHEN_FULL) {
-                // TODO: Implement new LogoutState() state.
+                context.getTabs().logout();
+                context.stop();
             } else {
                 GlobalSettings.LOOT = false;
                 GlobalSettings.POWERKILL = true;
@@ -42,7 +59,11 @@ public class CheckInventoryState implements State {
 
                 if (noFoodCounter == GlobalSettings.FOOD_NAMES.length) {
                     GlobalSettings.SOURCE_TILE = context.getLocalPlayer().getTile();
-                    nextState = new WalkToBankState();
+                    if (GlobalSettings.USE_PATH_CREATOR) {
+                        nextState = new WalkToBankWithGuidanceState();
+                    } else {
+                        nextState = new WalkToBankState();
+                    }
                 } else {
                     nextState = new KillMobState();
                     if (GlobalSettings.USE_POTION && context.getInventory().contains(item -> item.getName().contains("potion"))) {

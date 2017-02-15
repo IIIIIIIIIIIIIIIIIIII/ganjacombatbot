@@ -4,6 +4,8 @@ import com.toliga.ganjabots.core.SaveManager;
 import com.toliga.ganjabots.core.Utilities;
 import com.toliga.ganjabots.core.Validator;
 import com.toliga.ganjabots.graphics.InGameGUIBuilder;
+import com.toliga.ganjabots.path.ActionElement;
+import com.toliga.ganjabots.path.PathElement;
 import com.toliga.ganjabots.path.PathProfile;
 import com.toliga.ganjacombatbot.drawables.*;
 import com.toliga.ganjacombatbot.rules.SeperableTextValidator;
@@ -11,9 +13,10 @@ import org.dreambot.api.script.AbstractScript;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
+import java.io.File;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
 
 public class BotGUI extends JFrame {
     private JButton btnStart;
@@ -80,7 +83,7 @@ public class BotGUI extends JFrame {
         this.context = (GanjaCombatBotMain) context;
         listModel = new DefaultListModel<>();
         profileList.setModel(listModel);
-        saveManager = new SaveManager();
+        saveManager = new SaveManager(System.getenv().get("HOME") + "DreamBot\\Scripts\\GanjaCombatBot\\save.dat");
         validator = new Validator();
         inGameGUI = new InGameGUIBuilder(context, GanjaCombatBotMain.VERSION, new MainDrawable(context));
         validator.addValidation(new SeperableTextValidator());
@@ -215,7 +218,11 @@ public class BotGUI extends JFrame {
             saveManager.saveOptions(pairs);
 
             if (GlobalSettings.USE_PATH_CREATOR) {
-                GlobalSettings.CHOSEN_PROFILE = profiles.get(profileList.getSelectedIndex());
+                int[] selectedIndices = profileList.getSelectedIndices();
+
+                //GlobalSettings.CHOSEN_BANK_GO_PROFILE = profiles.get(profileList.getSelectedIndex());
+                GlobalSettings.CHOSEN_BANK_GO_PROFILE = profiles.get(selectedIndices[0]);
+                GlobalSettings.CHOSEN_BANK_RETURN_PROFILE = profiles.get(selectedIndices[1]);
             }
 
             context.setStarted(true);
@@ -412,13 +419,43 @@ public class BotGUI extends JFrame {
         });
 
         btnCreateProfile.addActionListener(event -> {
-            PathProfile profile = new PathProfile(pathProfileTextField.getText(), saveManager);
+            PathProfile toProfile = new PathProfile(pathProfileTextField.getText() + "_TO");
+            PathProfile fromProfile = new PathProfile(pathProfileTextField.getText() + "_FROM");
 
-            PathFinderGUI pathFinderGUI = new PathFinderGUI(context, profile);
+            PathFinderGUI pathFinderGUI = new PathFinderGUI(context, toProfile, fromProfile);
             pathFinderGUI.setVisible(true);
 
-            profiles.add(profile);
-            listModel.addElement(profile.toString());
+            profiles.add(toProfile);
+            profiles.add(fromProfile);
+            listModel.addElement(toProfile.toString());
+            listModel.addElement(fromProfile.toString());
+        });
+
+        btnLoadProfile.addActionListener(event -> {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(System.getenv().get("HOME") + "DreamBot\\Scripts\\GanjaCombatBot"));
+            int returnValue = fileChooser.showOpenDialog(this);
+            SaveManager profileSaveManager;
+
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                profileSaveManager = new SaveManager(fileChooser.getSelectedFile().getAbsolutePath());
+                LinkedHashMap<String, String> savedProfile = profileSaveManager.loadAll();
+                PathProfile tempPathProfile = new PathProfile(savedProfile.get("name"));
+                savedProfile.remove("name");
+
+                for (Map.Entry<String, String> entry : savedProfile.entrySet()) {
+                    if (entry.getKey().contains("tile")) {
+                        tempPathProfile.addElement(new PathElement(Integer.parseInt(entry.getValue().split(",")[0]), Integer.parseInt(entry.getValue().split(",")[1])));
+                    } else if (entry.getKey().contains("action")) {
+                        tempPathProfile.addElement(new ActionElement(Integer.parseInt(entry.getValue().split(",")[0]), entry.getValue().split(",")[1]));
+                    }
+                    AbstractScript.log(entry.getKey() + " - " + entry.getValue());
+                }
+
+                profiles.add(tempPathProfile);
+
+                listModel.addElement(tempPathProfile.toString());
+            }
         });
     }
 

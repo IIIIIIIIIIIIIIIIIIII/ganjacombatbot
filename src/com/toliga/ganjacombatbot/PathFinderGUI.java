@@ -19,18 +19,22 @@ public class PathFinderGUI extends JFrame {
     private JTextField actionTextField;
     private JButton btnAddAction;
     private JButton btnSaveCurrentTile;
-    private JList actionList;
-    private DefaultListModel<String> listModel = new DefaultListModel<>();
+    private DefaultListModel<String> toListModel = new DefaultListModel<>();
+    private DefaultListModel<String> fromListModel = new DefaultListModel<>();
     private AbstractScript context;
-    private PathProfile pathProfile;
+    private PathProfile toPathProfile;
+    private PathProfile fromPathProfile;
     private JButton btnSaveProfile;
+    private JRadioButton rdbtnToBank;
+    JRadioButton rdbtnFromBank;
 
     /**
      * Create the frame.
      */
-    public PathFinderGUI(AbstractScript context, PathProfile pathProfile) {
+    public PathFinderGUI(AbstractScript context, PathProfile toPathProfile, PathProfile fromPathProfile) {
         this.context = context;
-        this.pathProfile = pathProfile;
+        this.toPathProfile = toPathProfile;
+        this.fromPathProfile = fromPathProfile;
         setTitle("GanjaSmuggler - Path Creator");
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
@@ -66,16 +70,11 @@ public class PathFinderGUI extends JFrame {
         panel.add(actionTextField);
         actionTextField.setColumns(7);
 
-        btnAddAction = new JButton("Add");
+        btnAddAction = new JButton("Add ");
         panel.add(btnAddAction);
 
-        btnSaveCurrentTile = new JButton("Add Current Tile");
+        btnSaveCurrentTile = new JButton("Save Current Tile");
         panel.add(btnSaveCurrentTile);
-
-        JScrollPane scrollPane = new JScrollPane();
-        actionList = new JList(listModel);
-        scrollPane.setViewportView(actionList);
-        contentPane.add(scrollPane, BorderLayout.CENTER);
 
         JPanel panel_2 = new JPanel();
         contentPane.add(panel_2, BorderLayout.SOUTH);
@@ -83,39 +82,73 @@ public class PathFinderGUI extends JFrame {
         btnSaveProfile = new JButton("Save Profile");
         panel_2.add(btnSaveProfile);
 
+        JPanel panel_3 = new JPanel();
+        contentPane.add(panel_3, BorderLayout.CENTER);
+        panel_3.setLayout(new GridLayout(1, 2, 5, 5));
+
+        JPanel panel_4 = new JPanel();
+        panel_3.add(panel_4);
+        panel_4.setLayout(new BorderLayout(0, 0));
+
+        rdbtnToBank = new JRadioButton("To Bank");
+        rdbtnToBank.setHorizontalAlignment(SwingConstants.CENTER);
+        panel_4.add(rdbtnToBank, BorderLayout.NORTH);
+
+        JList toBankList = new JList(toListModel);
+        panel_4.add(toBankList, BorderLayout.CENTER);
+
+        JPanel panel_5 = new JPanel();
+        panel_3.add(panel_5);
+        panel_5.setLayout(new BorderLayout(0, 0));
+
+        rdbtnFromBank = new JRadioButton("From Bank");
+        rdbtnFromBank.setHorizontalAlignment(SwingConstants.CENTER);
+        panel_5.add(rdbtnFromBank, BorderLayout.NORTH);
+
+        JList fromBankList = new JList(fromListModel);
+        panel_5.add(fromBankList, BorderLayout.CENTER);
+
+        ButtonGroup btnGroup = new ButtonGroup();
+        btnGroup.add(rdbtnFromBank);
+        btnGroup.add(rdbtnToBank);
         registerEvents();
     }
 
     private void registerEvents() {
         btnSaveCurrentTile.addActionListener(event -> {
-            PathElement pathElement = new PathElement();
-            pathElement.x = context.getLocalPlayer().getTile().getX();
-            pathElement.y = context.getLocalPlayer().getTile().getY();
+            PathElement pathElement = new PathElement(context.getLocalPlayer().getTile().getX(), context.getLocalPlayer().getTile().getY());
 
-            pathProfile.addElement(pathElement);
-
-            listModel.addElement(visibleIndex++ + ". " + pathElement.toString());
+            if (rdbtnToBank.isSelected()) {
+                toPathProfile.addElement(pathElement);
+                toListModel.addElement(visibleIndex++ + ". " + pathElement.toString());
+            } else if (rdbtnFromBank.isSelected()) {
+                fromPathProfile.addElement(pathElement);
+                fromListModel.addElement(visibleIndex++ + ". " + pathElement.toString());
+            }
         });
 
         btnAddAction.addActionListener(event -> {
-            ActionElement actionElement = new ActionElement();
-            actionElement.objectID = Integer.parseInt(idTextField.getText());
-            actionElement.actionName = actionTextField.getText();
+            ActionElement actionElement = new ActionElement(Integer.parseInt(idTextField.getText()), actionTextField.getText());
 
-            pathProfile.addElement(actionElement);
-
-            listModel.addElement(visibleIndex++ + ". " + actionElement.toString());
+            if (rdbtnToBank.isSelected()) {
+                toPathProfile.addElement(actionElement);
+                toListModel.addElement(visibleIndex++ + ". " + actionElement.toString());
+            } else if (rdbtnFromBank.isSelected()) {
+                fromPathProfile.addElement(actionElement);
+                fromListModel.addElement(visibleIndex++ + ". " + actionElement.toString());
+            }
         });
 
         btnSaveProfile.addActionListener(event -> {
-            //pathProfile.saveProfile();
+            JFileChooser fc = new JFileChooser();
+            int returnValue = fc.showSaveDialog(this);
+
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                toPathProfile.saveProfile(fc.getSelectedFile().getAbsolutePath() + ".to");
+                fromPathProfile.saveProfile(fc.getSelectedFile().getAbsolutePath() + ".from");
+            }
             setVisible(false);
             dispose();
         });
     }
-
-    public ListModel<String> getListModel() {
-        return listModel;
-    }
-
 }

@@ -12,19 +12,19 @@ import org.dreambot.api.methods.map.Tile;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.wrappers.interactive.GameObject;
 
-public class WalkToBankWithGuidanceState implements State {
+public class WalkFromBankWithGuidanceState implements State {
 
     private Element currentElement;
     private PathProfile chosenProfile;
 
-    public WalkToBankWithGuidanceState() {
-        chosenProfile = GlobalSettings.CHOSEN_BANK_GO_PROFILE;
+    public WalkFromBankWithGuidanceState() {
+        chosenProfile = GlobalSettings.CHOSEN_BANK_RETURN_PROFILE;
         currentElement = chosenProfile.nextElement();
     }
 
     @Override
     public boolean execute(AbstractScript context, AntibanManager antibanManager) {
-        if (GlobalSettings.DEBUG) AbstractScript.log("WALK_TO_BANK_WITH_GUIDANCE");
+        if (GlobalSettings.DEBUG) AbstractScript.log("WALK_FROM_BANK_WITH_GUIDANCE");
 
         if (currentElement == null) {
             return true;
@@ -43,24 +43,20 @@ public class WalkToBankWithGuidanceState implements State {
             return false;
         } else {
             GameObject object;
-            if ((object = context.getGameObjects().closest(obj -> obj.getID() == ((ActionElement) currentElement).objectID && obj.distance(context.getLocalPlayer()) < 2)) != null) {
+            if ((object = context.getGameObjects().closest(obj -> obj.getID() == ((ActionElement) currentElement).objectID)) != null) {
                 if (object.interact(((ActionElement) currentElement).actionName)) {
                     AbstractScript.sleep(600, 900);
                     currentElement = chosenProfile.nextElement();
                 }
-            }/* else {
+            } else {
                 currentElement = chosenProfile.nextElement();
-            }*/
+            }
             return false;
         }
     }
 
     @Override
     public State next() {
-        BankState bankState = new BankState();
-        if (GlobalSettings.EAT_FOOD) {
-            bankState.setGetFood(true);
-        }
-        return bankState;
+        return new CheckInventoryState();
     }
 }

@@ -39,7 +39,7 @@ public class KillMobState implements State {
                 AbstractScript.log("Chosen: " + npc.getName());
             }
         } else if (npc != null && npc.getHealthPercent() == 0) {
-            if (GlobalSettings.LOOT) {
+            if (GlobalSettings.LOOT && GlobalSettings.EAT_FOOD_TAKE_LOOT) {
                 nextState = new TakeLootState();
             } else {
                 nextState = new CheckInventoryState();

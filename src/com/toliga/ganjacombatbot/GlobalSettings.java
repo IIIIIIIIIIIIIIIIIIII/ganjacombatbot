@@ -30,8 +30,10 @@ public class GlobalSettings {
     public static boolean USE_ANTIBAN = false;
     public static boolean USE_PATH_CREATOR = false; // real value false
     public static boolean DEBUG = true; // default value will be false
+    public static boolean EAT_FOOD_TAKE_LOOT = true;
 
-    public static PathProfile CHOSEN_PROFILE = null;
+    public static PathProfile CHOSEN_BANK_GO_PROFILE = null;
+    public static PathProfile CHOSEN_BANK_RETURN_PROFILE = null;
 
     public static Tile SOURCE_TILE = null;
 }
