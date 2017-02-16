@@ -573,7 +573,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="7b019" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+                  <component id="7b019" class="javax.swing.JTextField" binding="worldHopTextField">
                     <constraints/>
                     <properties>
                       <columns value="5"/>
@@ -594,7 +594,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="6a82c" class="javax.swing.JTextField" default-binding="true">
+                  <component id="6a82c" class="javax.swing.JTextField" binding="runTimeTextField">
                     <constraints/>
                     <properties>
                       <columns value="5"/>
@@ -615,7 +615,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="e5e87" class="javax.swing.JTextField" default-binding="true">
+                  <component id="e5e87" class="javax.swing.JTextField" binding="breakTimeTextField">
                     <constraints/>
                     <properties>
                       <columns value="5"/>

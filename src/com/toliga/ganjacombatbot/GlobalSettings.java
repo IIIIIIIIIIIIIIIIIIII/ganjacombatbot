@@ -10,6 +10,9 @@ public class GlobalSettings {
 
     public static int HEALTH_PERCENT = 0;
     public static int FOOD_AMOUNT = 0;
+    public static int WORLD_HOP_TIME = 0;
+    public static int BREAK_TIME = 0;
+    public static int WORK_TIME = 0;
 
     public static boolean POWERKILL = false;
     public static boolean LOOT = false;
@@ -31,6 +34,9 @@ public class GlobalSettings {
     public static boolean USE_PATH_CREATOR = false; // real value false
     public static boolean DEBUG = true; // default value will be false
     public static boolean EAT_FOOD_TAKE_LOOT = true;
+    public static boolean WORLD_HOP = false;
+    public static boolean INTERACTION_RESPONSE = false;
+    public static boolean RANDOM_LOGOUT = false;
 
     public static PathProfile CHOSEN_BANK_GO_PROFILE = null;
     public static PathProfile CHOSEN_BANK_RETURN_PROFILE = null;

@@ -25,6 +25,10 @@ public class CombatAntibanManager extends AntibanManager {
             antibanFeature = new RandomTabChecking(0.1f);
         } else if (name.equalsIgnoreCase("interaction_response")) {
             antibanFeature = new InteractionResponse(1f);
+        } else if (name.equalsIgnoreCase("random_world_hop")) {
+            antibanFeature = new RandomWorldHop(1f);
+        } else if (name.equalsIgnoreCase("random_logout")) {
+            antibanFeature = new RandomLogout(1f);
         }
 
         if (antibanFeature != null && GlobalSettings.USE_ANTIBAN) {

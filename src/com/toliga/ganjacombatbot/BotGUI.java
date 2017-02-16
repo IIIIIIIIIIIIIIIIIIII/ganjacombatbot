@@ -9,6 +9,7 @@ import com.toliga.ganjabots.path.PathElement;
 import com.toliga.ganjabots.path.PathProfile;
 import com.toliga.ganjacombatbot.drawables.*;
 import com.toliga.ganjacombatbot.rules.SeperableTextValidator;
+import jdk.nashorn.internal.objects.Global;
 import org.dreambot.api.script.AbstractScript;
 
 import javax.swing.*;
@@ -56,7 +57,7 @@ public class BotGUI extends JFrame {
     private JSlider cameraSlider;
     private JSlider tabSlider;
     private JCheckBox interactionResponseCheckBox;
-    private JTextField textField1;
+    private JTextField worldHopTextField;
     private JButton btnToggleInGameGUI;
     private JButton btnOpenAttack;
     private JButton btnOpenStrength;
@@ -69,6 +70,8 @@ public class BotGUI extends JFrame {
     private JList profileList;
     private JButton btnLoadProfile;
     private JCheckBox usePathCreatorCheckBox;
+    private JTextField runTimeTextField;
+    private JTextField breakTimeTextField;
     private GanjaCombatBotMain context;
     private ImageIcon inGameGUIOpened;
     private ImageIcon inGameGUIClosed;
@@ -200,6 +203,13 @@ public class BotGUI extends JFrame {
                 GlobalSettings.FOOD_NAMES = foods;
                 GlobalSettings.FOOD_AMOUNT = foodAmountTextField.getText().isEmpty() ? 0 : Integer.parseInt(foodAmountTextField.getText());
                 GlobalSettings.HEALTH_PERCENT = healthSlider.getValue();
+            }
+
+            if (worldHopTextField.getText().isEmpty()) {
+                GlobalSettings.WORLD_HOP = false;
+            } else {
+                GlobalSettings.WORLD_HOP = true;
+                GlobalSettings.WORLD_HOP_TIME = Integer.parseInt(worldHopTextField.getText());
             }
 
             pairs.put("mobnames", mobNames);
@@ -354,6 +364,11 @@ public class BotGUI extends JFrame {
             JCheckBox source = (JCheckBox) event.getSource();
             GlobalSettings.USE_POTION = source.isSelected();
             tabbedPaneMenu.setEnabledAt(3, source.isSelected());
+        });
+
+        interactionResponseCheckBox.addChangeListener(event -> {
+            JCheckBox source = (JCheckBox) event.getSource();
+            GlobalSettings.INTERACTION_RESPONSE = source.isSelected();
         });
 
         combatCheckBox.addChangeListener(event -> {

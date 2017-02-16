@@ -9,7 +9,6 @@ import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
 import org.dreambot.api.script.listener.MessageListener;
-import org.dreambot.api.utilities.Timer;
 import org.dreambot.api.wrappers.widgets.message.Message;
 
 import java.awt.*;
@@ -21,13 +20,11 @@ public class GanjaCombatBotMain extends AbstractScript implements MessageListene
     private StateScheduler stateScheduler;
     private BotGUI botGUI;
     private boolean isStarted = false;
-    private Timer timer;
     private AntibanManager antibanManager;
 
     @Override
     public void onStart() {
         super.onStart();
-        timer = new Timer();
         botGUI = new BotGUI(this, "Ganja Combat Bot");
         stateScheduler = new StateScheduler(this, new StartState());
         antibanManager = new CombatAntibanManager(this);
@@ -36,6 +33,7 @@ public class GanjaCombatBotMain extends AbstractScript implements MessageListene
         antibanManager.addFeature("RANDOM_MOUSE_MOVEMENT");
         antibanManager.addFeature("RANDOM_TAB_CHECKING");
         antibanManager.addFeature("INTERACTION_RESPONSE");
+        antibanManager.addFeature("RANDOM_WORLD_HOP");
     }
 
     @Override
@@ -54,9 +52,9 @@ public class GanjaCombatBotMain extends AbstractScript implements MessageListene
     }
 
     @Override
-    public void onPaint(Graphics2D graphics2D) {
+    public void onPaint(Graphics graphics2D) {
         if (isStarted) {
-            botGUI.DrawInGameGUI(graphics2D);
+            botGUI.DrawInGameGUI((Graphics2D) graphics2D);
         }
         super.onPaint(graphics2D);
     }
@@ -68,8 +66,6 @@ public class GanjaCombatBotMain extends AbstractScript implements MessageListene
     public boolean isStarted() {
         return isStarted;
     }
-
-    public Timer getTimer() { return timer; }
 
     public AntibanManager getAntibanManager() {
         return antibanManager;
